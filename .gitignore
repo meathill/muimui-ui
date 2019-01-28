@@ -1,0 +1,10 @@
+# IDE
+.idea
+
+# repo
+node_modules
+dist
+
+# tmp
+tmp
+.DS_Store

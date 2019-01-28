@@ -1,0 +1,101 @@
+.switch {
+  position: relative;
+  display: inline-block;
+  font-size: 10px;
+  width: 6em;
+  height: 2.4em;
+  cursor: pointer;
+  margin-bottom: 0;
+
+  &.switch-disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+  }
+
+  &.md {
+    width: 5em;
+    font-size: 12px;
+  }
+
+  &.lg {
+    width: 7.5em;
+    font-size: 14px;
+  }
+
+  &.xl {
+    width: 10em;
+    font-size: 16px;
+  }
+
+  .form-horizontal &:only-child {
+    top: .5em
+  }
+}
+.switch-label {
+  display: block;
+  height: inherit;
+
+  &::before, &::after {
+    position: absolute;
+    top 0
+    line-height 2.4em
+    color: #fff;
+    text-transform uppercase
+  }
+  &::before {
+    left: .75em;
+    content: attr(data-on);
+    opacity: 0;
+  }
+  &::after {
+    right: .75em;
+    content: attr(data-off);
+  }
+}
+.switch-input {
+  display: none;
+
+  &:checked + .switch-slider {
+    background-color: #2FA4E7;
+  }
+  &:checked ~ .switch-handle {
+    left: calc(100% - 24px);
+  }
+  &:checked ~ .switch-label:before {
+    opacity: 1;
+  }
+  &:checked ~ .switch-label:after {
+    opacity: 0;
+  }
+
+  &:focus + .switch-slider {
+    box-shadow: 0 0 1px #2FA4E7;
+  }
+}
+
+.switch-slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  border-radius: 25px;
+  background-color: #ccc;
+  transition: .4s;
+}
+
+.switch-handle {
+  position: absolute;
+  height: 2em;
+  width: 2em
+  margin: .2em
+  left: 0;
+  bottom: 0;
+  border-radius: 50%;
+  background-color: white;
+  transition: .4s;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}

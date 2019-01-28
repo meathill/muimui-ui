@@ -1,0 +1,41 @@
+.or-page-header
+  position relative
+
+  [aria-label="breadcrumb"]
+    color #AAA
+    display flex
+    align-items center
+    margin-right .5em
+
+    a
+      color #999
+
+      &:hover
+        color var(--primary)
+
+  .breadcrumb
+    background-color transparent
+    margin-bottom 0
+    margin-right 1em
+    padding 0
+
+
+.page-header
+  display flex
+  align-items flex-end
+  padding-bottom 1rem
+  margin-bottom 1rem
+  line-height 1.2
+  border-bottom 1px solid #dee2e6
+
+  > nav
+    margin-bottom .25em
+
+  > h1
+    line-height 1
+
+  a.breadcrumb-item
+    color #999
+
+    &:hover
+      color var(--blue)
