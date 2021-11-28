@@ -2,16 +2,15 @@ const {resolve} = require('path');
 const {promises: {readdir, stat}} = require('fs');
 const {VueLoaderPlugin} = require('vue-loader');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
-const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
+const CssMinimizerWebpackPlugin = require('css-minimizer-webpack-plugin');
 const TerserPlugin = require('terser-webpack-plugin');
 const {DefinePlugin} = require('webpack');
 
 /* global __dirname */
-const env = process.env.BROWSERSLIST_ENV || 'modern';
 const plugins = [
   new VueLoaderPlugin(),
   new MiniCssExtractPlugin({
-    filename: 'bluebird-ui.css',
+    filename: 'muimui-ui.css',
   }),
   new DefinePlugin({
     __VUE_OPTIONS_API__: true,
@@ -21,9 +20,9 @@ const plugins = [
 
 const config = {
   output: {
-    path: env === 'modern' ? resolve(__dirname, '../dist') : resolve(__dirname, '../dist', 'ie'),
-    publicPath: env === 'modern' ? '/' : '/ie/',
-    library: 'bluebird-ui',
+    path: resolve(__dirname, '../dist') ,
+    publicPath: '/',
+    library: 'muimui-ui',
     libraryTarget: 'umd',
   },
   module: {
@@ -86,7 +85,7 @@ const config = {
           },
         },
       }),
-      new OptimizeCSSAssetsPlugin(),
+      new CssMinimizerWebpackPlugin(),
     ],
   },
   externals: [

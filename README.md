@@ -1,23 +1,7 @@
-Bluebird ui
-========
+Muimui ui
+=========
 
-UI components built on Vue, mainly for admin panels.
-
-Vue 3
---------
-
-We now have a version based on Vue 3: https://github.com/orinc/bluebird-ui/tree/vue-3.
-
-Until we officially switch to Vue 3, we'll be maintaining two branches
-simultaneously. Compared to `master`, `vue-3` branch should only has
-differences due to dependencies.
-
-So if you found a bug or want to implement a new feature, please follow:
-
-1. fix it or implement it on `master` branch
-2. rebase `vue-3` branch to new `master`
-3. make sure new code works well on `vue-3`, too
-4. publish both v0.x (`master`) and v1.x (`vue-3`)
+A simple Vue 3 UI components, mainly for admin panels.
 
 ## Install
 
@@ -30,47 +14,36 @@ To install this package, make sure your token is added to file `~/.npmrc` like:
 And then install by:
 
 ```sh
-$ npm install @orinc/bluebird-ui
+$ npm install @meathill/muimui-ui
 # or specify the version
-$ npm install @orinc/bluebird-ui@0.7.1
+$ npm install @meathill/muimui-ui@0.7.1
 ```
 
-## Release
-
-To publish the package on GitHub Package Registry, you need a token with `write:packages` and `repo` scopes.
-
-If you make some changes and need to publish a new version, here is the steps:
-
-```sh
-# make changes and also upgrade version number in package.json
-$ git commit -am "made some changes or bugfix commit message"
-# run release command, it will push the commit and build the package and publish to github registry
-$ npm run release
-```
 
 Usage
 --------
 
 1. Install this repo into dependencies
-2. import CSS file in the entry file like:
-    `import '@orinc/bluebird-ui/dist/bluebird-ui.css';`
-3. import component from separated files, like:
-    `import Pagination from '@orinc/bluebird-ui/dist/Pagination'`,
+2. Import CSS file in the entry file like:
+    `import '@meathill/muimui-ui/dist/muimui-ui.css';`
+3. Import component from separated files, like:
+    `import Pagination from '@meathill/muimui-ui/dist/Pagination'`,
     in order to use tree-shaking.
-4. for mixins, import them like:
-    `import format from '@orinc/bluebird-ui/dist/mixins/format'`
+4. For mixins, import them like:
+    `import format from '@meathill/muimui-ui/dist/mixins/format'`
 
 
 Development
---------
+-----------
 
 1. Styles should be put in `/src/styl/${component}.styl`, and
     `import` in `<script>` in `${component}.vue` file. Because
     webpack + vue-loader won't merge styles from vue files' `<style>`
     into a single file.
 
+
 Components
---------
+----------
 
 ### Alert
 

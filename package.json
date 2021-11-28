@@ -1,66 +1,66 @@
 {
-  "name": "@orinc/bluebird-ui",
-  "version": "1.2.0",
-  "description": "UI components built on Vue, mainly for admin panels.",
+  "name": "@meathill/muimui-ui",
+  "version": "0.1.0",
+  "description": "A simple Vue 3 UI components, mainly for admin panels.",
   "main": "dist/index.js",
   "scripts": {
     "serve": "webpack serve --config build/webpack.config.demo.js",
-    "build": "npm run build:modern && npm run build:withie",
-    "build:modern": "BROWSERSLIST_ENV=modern webpack --config build/webpack.config.js --mode=production",
-    "build:withie": "BROWSERSLIST_ENV=withie webpack --config build/webpack.config.js --mode=production",
+    "build": "BROWSERSLIST_ENV=modern webpack --config build/webpack.config.js --mode=production",
     "build:analyze": "webpack --config build/webpack.config.js --mode=production --analyze",
     "lint": "eslint ./ --ext=.js,.vue --fix",
-    "release": "git push && rimraf dist && mkdir -p dist && npm run build && npm publish"
+    "release": "npm run build && npm publish"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/orinc/bluebird-ui.git"
+    "url": "git+https://github.com/meathill/muimui-ui.git"
   },
   "publishConfig": {
     "registry": "https://npm.pkg.github.com/"
   },
   "keywords": [],
-  "author": "Meathill <meathill@openresty.com>",
-  "license": "UNLICENSED",
+  "author": "Meathill <meathill@gmail.com>",
+  "license": "MIT",
   "bugs": {
-    "url": "https://github.com/orinc/bluebird-ui/issues"
+    "url": "https://github.com/meathill/muimui-ui/issues"
   },
-  "homepage": "https://github.com/orinc/bluebird-ui#readme",
+  "homepage": "https://github.com/meathill/muimui-ui#readme",
   "devDependencies": {
     "@babel/core": "^7.12.3",
+    "@babel/plugin-transform-runtime": "^7.16.4",
     "@babel/preset-env": "^7.12.1",
+    "@babel/runtime-corejs3": "^7.16.3",
     "babel-eslint": "^10.1.0",
     "babel-loader": "^8.1.0",
-    "bootstrap": "^4.5.3",
+    "bootstrap": "^5.1.3",
     "core-js": "^3.6.5",
-    "css-loader": "^5.0.0",
-    "eslint": "^7.11.0",
+    "css-loader": "^6.5.1",
+    "css-minimizer-webpack-plugin": "^3.2.0",
+    "eslint": "^8.3.0",
     "eslint-plugin-babel": "^5.3.1",
-    "eslint-plugin-vue": "^7.1.0",
-    "html-webpack-plugin": "^4.5.0",
+    "eslint-plugin-vue": "^8.1.1",
+    "html-webpack-plugin": "^5.5.0",
     "lodash": "^4.17.20",
-    "mini-css-extract-plugin": "^1.0.0",
-    "optimize-css-assets-webpack-plugin": "^5.0.4",
+    "mini-css-extract-plugin": "^2.4.5",
     "pug": "^3.0.2",
     "pug-loader": "^2.4.0",
     "pug-plain-loader": "^1.0.0",
-    "style-loader": "^2.0.0",
-    "stylus": "^0.54.8",
-    "stylus-loader": "^4.1.1",
+    "style-loader": "^3.3.1",
+    "stylus": "^0.55.0",
+    "stylus-loader": "^6.2.0",
     "terser-webpack-plugin": "^5.0.0",
     "vue": "^3.0.1",
     "vue-loader": "^16.0.0-beta.8",
     "vue-router": "^4.0.0-beta.13",
     "vue-template-compiler": "^2.6.12",
     "webpack": "^5.1.3",
-    "webpack-bundle-analyzer": "^3.9.0",
-    "webpack-cli": "^4.1.0"
+    "webpack-bundle-analyzer": "^4.5.0",
+    "webpack-cli": "^4.1.0",
+    "webpack-dev-server": "^4.6.0"
   },
   "dependencies": {
     "@vue/compiler-sfc": "^3.0.1",
     "eventemitter3": "^4.0.7",
-    "moment": "^2.29.1",
-    "webpack-dev-server": "^3.11.0"
+    "moment": "^2.29.1"
   },
   "sideEffects": [
     "*.styl",
