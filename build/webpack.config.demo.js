@@ -3,8 +3,6 @@ const {assign} = require('lodash');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const config = require('./webpack.config');
 
-/* global __dirname */
-
 const demoConfig = config()
   .then(config => {
     return assign(config, {

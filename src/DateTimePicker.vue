@@ -225,30 +225,7 @@ export default {
       default: null,
     },
   },
-  computed: {
-    localLocale() {
-      return this.locale || locale;
-    },
-    localDisabledDates() {
-      return this.disabledDates ? this.disabledDates.map(date => {
-        return toDateString(date);
-      }) : [];
-    },
-    disabledDaysArray() {
-      return this.disabledDaysOfWeek.map(d => parseInt(d, 10));
-    },
-    localRangeStart() {
-      return this.isRange
-        ? this.localValue[0].clone().add(-1, 'days')
-        : toMoment(this.minDateTime).add(-1, 'days');
-    },
-    localRangeEnd() {
-      return this.isRange ? this.localValue[1] : toMoment(this.maxDateTime);
-    },
-    hasSecond() {
-      return /s{1,2}/.test(this.format);
-    },
-  },
+  emits: ['update:modelValue'],
   data() {
     return {
       localValue: null,
@@ -275,6 +252,30 @@ export default {
       dayHeader: '',
     };
   },
+  computed: {
+    localLocale() {
+      return this.locale || locale;
+    },
+    localDisabledDates() {
+      return this.disabledDates ? this.disabledDates.map(date => {
+        return toDateString(date);
+      }) : [];
+    },
+    disabledDaysArray() {
+      return this.disabledDaysOfWeek.map(d => parseInt(d, 10));
+    },
+    localRangeStart() {
+      return this.isRange
+        ? this.localValue[0].clone().add(-1, 'days')
+        : toMoment(this.minDateTime).add(-1, 'days');
+    },
+    localRangeEnd() {
+      return this.isRange ? this.localValue[1] : toMoment(this.maxDateTime);
+    },
+    hasSecond() {
+      return /s{1,2}/.test(this.format);
+    },
+  },
   watch: {
     modelValue() {
       this.processValue();
@@ -294,6 +295,22 @@ export default {
         this.close();
       }
     },
+  },
+  beforeMount() {
+    this.processValue();
+    this.update(false);
+    this.displayDayView = /[YyMD]/.test(this.format);
+    this.displayTimePart = /[HhmsS]/.test(this.format);
+    this._blur = e => {
+      if (!this.$el.contains(e.target)) {
+        this.close();
+      }
+    };
+    window.addEventListener('click', this._blur);
+    this.getDateRange();
+  },
+  beforeUnmount() {
+    window.removeEventListener('click', this._blur);
   },
   methods: {
     close() {
@@ -551,22 +568,6 @@ export default {
       }
       this.update(false);
     },
-  },
-  beforeMount() {
-    this.processValue();
-    this.update(false);
-    this.displayDayView = /[YyMD]/.test(this.format);
-    this.displayTimePart = /[HhmsS]/.test(this.format);
-    this._blur = e => {
-      if (!this.$el.contains(e.target)) {
-        this.close();
-      }
-    };
-    window.addEventListener('click', this._blur);
-    this.getDateRange();
-  },
-  beforeUnmount() {
-    window.removeEventListener('click', this._blur);
   },
 };
 </script>

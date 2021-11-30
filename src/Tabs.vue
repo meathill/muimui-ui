@@ -31,6 +31,15 @@ export default {
     navStyle: {type: String, default: null},
     activeTab: {type: Number, default: 0},
   },
+  emits: ['active', 'input'],
+  data() {
+    const index = this.activeTab || 0;
+    return {
+      index,
+      headers: [],
+      tabs: [],
+    };
+  },
   computed: {
     navStyleClass() {
       return [
@@ -45,14 +54,6 @@ export default {
       return this.tabs[this.index] || this.tabs[0];
     },
   },
-  data() {
-    const index = this.activeTab || 0;
-    return {
-      index,
-      headers: [],
-      tabs: [],
-    };
-  },
   watch: {
     index(val) {
       this.$emit('active', val);
@@ -62,15 +63,15 @@ export default {
       this.index = val;
     },
   },
+  created() {
+    this._isTabs = true;
+  },
   methods: {
     doSelect(tab) {
       if (!tab.disabled) {
         this.index = this.tabs.indexOf(tab);
       }
     },
-  },
-  created() {
-    this._isTabs = true;
   },
 };
 </script>

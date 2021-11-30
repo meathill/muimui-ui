@@ -55,6 +55,13 @@ export default {
     };
   },
 
+  beforeMount() {
+    document.body.addEventListener('click', this.onBodyClick);
+  },
+  beforeUnmount() {
+    document.body.removeEventListener('click', this.onBodyClick);
+  },
+
   methods: {
     toggle() {
       this.show = !this.show;
@@ -64,13 +71,6 @@ export default {
         this.show = false;
       }
     },
-  },
-
-  beforeMount() {
-    document.body.addEventListener('click', this.onBodyClick);
-  },
-  beforeUnmount() {
-    document.body.removeEventListener('click', this.onBodyClick);
   },
 };
 </script>

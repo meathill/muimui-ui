@@ -34,6 +34,7 @@ import component from '@/demo/component';
 import Toggle from '@/Toggle';
 
 export default {
+  name: 'ToggleDemo',
   components: {
     Toggle,
   },

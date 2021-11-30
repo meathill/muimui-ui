@@ -24,6 +24,13 @@ export default {
       default: '将于 %s 秒后跳转。',
     },
   },
+  emits: ['over'],
+
+  data() {
+    return {
+      left: 0,
+    };
+  },
 
   computed: {
     formatted() {
@@ -31,10 +38,13 @@ export default {
     },
   },
 
-  data() {
-    return {
-      left: 0,
-    };
+  beforeMount() {
+    this.left = this.duration;
+    this.interval = setInterval(this.countDown.bind(this), 1000);
+  },
+
+  beforeUnmount() {
+    clearInterval(this.interval);
   },
 
   methods: {
@@ -46,15 +56,6 @@ export default {
       clearInterval(this.interval);
       this.$emit('over');
     },
-  },
-
-  beforeMount() {
-    this.left = this.duration;
-    this.interval = setInterval(this.countDown.bind(this), 1000);
-  },
-
-  beforeUnmount() {
-    clearInterval(this.interval);
   },
 };
 </script>

@@ -49,6 +49,7 @@ export default {
       default: false,
     },
   },
+  emits: ['update:modelValue', 'change'],
   computed: {
     hasNext() {
       return this.modelValue < this.last;

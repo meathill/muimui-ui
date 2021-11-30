@@ -43,6 +43,16 @@ export default {
     };
   },
 
+  created() {
+    this.promises = [];
+  },
+  mounted() {
+    document.body.addEventListener('keyup', this.onEsc);
+  },
+  beforeUnmount() {
+    document.body.removeEventListener('keyup', this.onEsc);
+  },
+
   methods: {
     doCancel(index, cancel) {
       this.modals.splice(index, 1);
@@ -107,16 +117,6 @@ export default {
       }
       this.closeModal();
     },
-  },
-
-  created() {
-    this.promises = [];
-  },
-  mounted() {
-    document.body.addEventListener('keyup', this.onEsc);
-  },
-  beforeUnmount() {
-    document.body.removeEventListener('keyup', this.onEsc);
   },
 };
 </script>

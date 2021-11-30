@@ -28,6 +28,7 @@ import Dropdown from '@/dropdown';
 import component from '@/demo/component';
 
 export default {
+  name: 'DropdownDemo',
   components: {
     Dropdown,
   },

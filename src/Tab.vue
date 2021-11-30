@@ -14,6 +14,11 @@ export default {
     disabled: {type: Boolean, default: false},
     header: {type: String, default: null},
   },
+  data() {
+    return {
+      fadein: false,
+    };
+  },
   computed: {
     active() {
       var active = !this._tabs || this._tabs.show === this;
@@ -31,11 +36,6 @@ export default {
     transition() {
       return this._tabs ? this._tabs.effect : null;
     },
-  },
-  data() {
-    return {
-      fadein: false,
-    };
   },
   created() {
     this._isTab = true;

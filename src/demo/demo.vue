@@ -10,6 +10,7 @@
 <script>
 import {components} from './router';
 export default {
+  name: 'DemoView',
   computed: {
     localRoutes() {
       return components.filter(({title}) => !!title);

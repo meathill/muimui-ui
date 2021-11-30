@@ -53,7 +53,7 @@ export default {
       default: null,
     },
   },
-
+  emits: ['update:modelValue'],
   data() {
     return {
       isSearching: false,
@@ -75,6 +75,17 @@ export default {
           });
       }
     },
+  },
+
+  beforeMount() {
+    this.doAutoSearch = debounce(this.doSearch, 200);
+    if (this.onlySearch) {
+      this.isSearching = true;
+    }
+  },
+
+  beforeUnmount() {
+    this.doAutoSearch = null;
   },
 
   methods: {
@@ -104,17 +115,6 @@ export default {
     focus() {
       this.$refs.search.focus();
     },
-  },
-
-  beforeMount() {
-    this.doAutoSearch = debounce(this.doSearch, 200);
-    if (this.onlySearch) {
-      this.isSearching = true;
-    }
-  },
-
-  beforeUnmount() {
-    this.doAutoSearch = null;
   },
 };
 </script>

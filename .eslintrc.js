@@ -2,13 +2,15 @@
 
 module.exports = {
   env: {
-    es6: true,
+    es2021: true,
     browser: true,
+    node: true,
   },
+  parser: "vue-eslint-parser",
   parserOptions: {
-    parser: 'babel-eslint',
+    parser: "@babel/eslint-parser",
     sourceType: 'module',
-    ecmaVersion: 'esnext',
+    ecmaVersion: 'latest',
   },
   plugins: [
     'babel',
@@ -16,7 +18,7 @@ module.exports = {
   ],
   extends: [
     'eslint:recommended',
-    'plugin:vue/recommended',
+    'plugin:vue/vue3-recommended',
   ],
   globals: {
     PRODUCTION: false,
@@ -24,5 +26,6 @@ module.exports = {
     describe: false,
     it: false,
     expect: false,
+    __dirname: true,
   },
 };

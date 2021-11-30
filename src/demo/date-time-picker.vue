@@ -110,19 +110,6 @@ export default {
   },
   mixins: [component],
 
-  computed: {
-    disabled() {
-      const today = new Date();
-      const yesterday = moment().add(-1, 'days');
-      const tomorrow = moment().add(1, 'days');
-      const lastDayOfLastMonth = moment().add(-1 * today.getDate() - 1, 'days');
-      const firstDayOfNextMonth = moment()
-        .add(1, 'months')
-        .add(-1 * today.getDate() + 1, 'days');
-      return [yesterday, tomorrow, lastDayOfLastMonth, firstDayOfNextMonth];
-    },
-  },
-
   data() {
     const minDateTime = moment().add(-7, 'days');
     const maxDateTime = moment().add(7, 'days');
@@ -139,6 +126,19 @@ export default {
       maxDateTime,
       disabledComponent: false,
     };
+  },
+
+  computed: {
+    disabled() {
+      const today = new Date();
+      const yesterday = moment().add(-1, 'days');
+      const tomorrow = moment().add(1, 'days');
+      const lastDayOfLastMonth = moment().add(-1 * today.getDate() - 1, 'days');
+      const firstDayOfNextMonth = moment()
+        .add(1, 'months')
+        .add(-1 * today.getDate() + 1, 'days');
+      return [yesterday, tomorrow, lastDayOfLastMonth, firstDayOfNextMonth];
+    },
   },
 };
 </script>

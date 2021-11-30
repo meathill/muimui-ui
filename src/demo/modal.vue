@@ -44,6 +44,7 @@ import InputForm from './input-form';
 import {sleep} from '@/helper';
 
 export default {
+  name: 'ModalDemo',
   components: {
     Toggle,
   },

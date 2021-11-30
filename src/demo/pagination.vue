@@ -56,6 +56,7 @@ import Pagination from '@/Pagination';
 import Toggle from '@/Toggle';
 
 export default {
+  name: 'PaginationDemo',
   components: {
     Pagination,
     Toggle,

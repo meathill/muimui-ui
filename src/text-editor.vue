@@ -70,6 +70,25 @@ export default {
     };
   },
 
+  mounted() {
+    const style = getComputedStyle(this.$el);
+    const fontSize = style.getPropertyValue('font-size');
+    const lineHeight = style.getPropertyValue('line-height');
+    const color = style.getPropertyValue('color');
+    const fontWeight = style.getPropertyValue('font-weight');
+    const marginBottom = style.getPropertyValue('margin-bottom');
+    this.style = {
+      fontSize,
+      lineHeight,
+      color,
+      fontWeight,
+      marginBottom,
+      ...this.isMultiline ? null : {
+        height: lineHeight,
+      },
+    };
+  },
+
   methods: {
     cancel() {
       this.localValue = this.modelValue;
@@ -97,25 +116,6 @@ export default {
         this.$refs.input.select();
       }
     },
-  },
-
-  mounted() {
-    const style = getComputedStyle(this.$el);
-    const fontSize = style.getPropertyValue('font-size');
-    const lineHeight = style.getPropertyValue('line-height');
-    const color = style.getPropertyValue('color');
-    const fontWeight = style.getPropertyValue('font-weight');
-    const marginBottom = style.getPropertyValue('margin-bottom');
-    this.style = {
-      fontSize,
-      lineHeight,
-      color,
-      fontWeight,
-      marginBottom,
-      ...this.isMultiline ? null : {
-        height: lineHeight,
-      },
-    };
   },
 };
 </script>

@@ -38,12 +38,6 @@ export default {
     SearchField,
   },
 
-  computed: {
-    filterOutput() {
-      return JSON.stringify(this.filter, null, '  ');
-    },
-  },
-
   data() {
     return {
       history: [
@@ -58,6 +52,12 @@ export default {
         name: '',
       },
     };
+  },
+
+  computed: {
+    filterOutput() {
+      return JSON.stringify(this.filter, null, '  ');
+    },
   },
 
   methods: {

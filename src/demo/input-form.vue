@@ -30,15 +30,11 @@ export default {
       default: 0,
     },
   },
+  emits: ['confirm'],
   data() {
     return {
       months: 0,
     };
-  },
-  methods: {
-    doSubmit() {
-      this.$emit('confirm', this.months);
-    },
   },
   mounted() {
     this.months = this.addon;
@@ -48,6 +44,11 @@ export default {
         months.focus();
         months.select();
       });
+  },
+  methods: {
+    doSubmit() {
+      this.$emit('confirm', this.months);
+    },
   },
 };
 </script>

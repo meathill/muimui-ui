@@ -43,6 +43,7 @@ import Alert from '@/alert';
 import Toggle from '@/Toggle';
 
 export default {
+  name: 'AlertDemo',
   components: {
     Toggle,
     Alert,

@@ -30,17 +30,18 @@ export default {
       default: 0,
     },
   },
-
-  computed: {
-    timeoutDuration() {
-      return Number(this.autoHide);
-    },
-  },
+  emits: ['hide'],
 
   data() {
     return {
       visible: true,
     };
+  },
+
+  computed: {
+    timeoutDuration() {
+      return Number(this.autoHide);
+    },
   },
 
   watch: {

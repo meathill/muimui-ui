@@ -82,7 +82,7 @@ export default {
       default: false,
     },
   },
-
+  emits: ['title-change'],
   data() {
     return {
       localTitle: '',
@@ -95,14 +95,14 @@ export default {
     },
   },
 
+  beforeMount() {
+    this.localTitle = this.title;
+  },
+
   methods: {
     onTitleChange() {
       this.$emit('title-change', this.localTitle);
     },
-  },
-
-  beforeMount() {
-    this.localTitle = this.title;
   },
 };
 </script>

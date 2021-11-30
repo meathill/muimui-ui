@@ -61,6 +61,16 @@ export default {
       default: 'toggle',
     },
   },
+  emits: ['update:modelValue', 'change'],
+
+  data() {
+    return {
+      defaultOnText: this.$gettext ? this.$gettext('ON') : 'ON',
+      defaultOffText: this.$gettext ? this.$gettext('OFF') : 'OFF',
+      isSuccess: null,
+      error: '',
+    };
+  },
 
   computed: {
     isChecked() {
@@ -79,15 +89,6 @@ export default {
     inputId() {
       return this.id ? 'toggle-' + this.id : null;
     },
-  },
-
-  data() {
-    return {
-      defaultOnText: this.$gettext ? this.$gettext('ON') : 'ON',
-      defaultOffText: this.$gettext ? this.$gettext('OFF') : 'OFF',
-      isSuccess: null,
-      error: '',
-    };
   },
 
   watch: {
