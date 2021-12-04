@@ -10,17 +10,17 @@
     @click="doOpenModal",
   ) Open Modal
 
-  button.btn.btn-primary.ml-3(
+  button.btn.btn-primary.ms-3(
     type="button",
     @click="doOpenNoFooterModal",
   ) Open no footer Modal
 
-  button.btn.btn-primary.ml-3(
+  button.btn.btn-primary.ms-3(
     type="button",
     @click="doOpenComponentModal",
   ) Open Component Modal
 
-  button.btn.btn-primary.ml-3(
+  button.btn.btn-primary.ms-3(
     type="button",
     @click="doOpenAutoCloseComponentModal",
   ) Open Auto-close Form Modal
@@ -28,7 +28,7 @@
   .action-bar.mt-3
     .form-group.form-inline
       label.col-form-label(for="toggle-backdrop") Backdrop
-      .pt-1.ml-2
+      .pt-1.ms-2
         toggle#backdrop(
           v-model="backdrop",
         )

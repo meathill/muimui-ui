@@ -31,7 +31,7 @@ header.or-page-header
       ) {{title}}
 
     slot(name="loading")
-      .loading.ml-3.pb-2(v-if="isLoading")
+      .loading.ms-3.pb-2(v-if="isLoading")
         span.spinner-border.spinner-border-sm
 
     slot(name="buttons")

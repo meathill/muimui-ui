@@ -10,7 +10,11 @@
 
       slot
 
-      button.close(type="button", @click="doDismiss") &times;
+      button.btn-close(
+        type="button",
+        aria-label="Close",
+        @click="doDismiss",
+      )
 </template>
 
 <script>

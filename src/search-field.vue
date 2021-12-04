@@ -26,7 +26,7 @@ button.search-field.search-field-button(
   type="button",
   @click="isSearching = true",
 )
-  i.fas.fa-search.mr-2
+  i.fas.fa-search.me-2
   span.search-field-label Search by "{{label}}"
 </template>
 

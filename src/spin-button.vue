@@ -3,9 +3,9 @@ button.btn.spin-button(
   :type="type",
   :disabled="status",
 )
-  span.spinner-border.spinner-border-sm.mr-2(v-if="status")
+  span.spinner-border.spinner-border-sm.me-2(v-if="status")
   slot(name="icon")
-    i.mr-2(
+    i.me-2(
       v-if="icon && !status",
       :class="icon",
     )
