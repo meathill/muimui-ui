@@ -1,5 +1,5 @@
 <template lang="pug">
-#app.d-flex
+#app.row
   demo-list.col-sm-2
   router-view.col-sm-10
 </template>
