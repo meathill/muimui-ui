@@ -19,35 +19,23 @@
     button.btn.btn-primary Update
 </template>
 
-<script>
+<script lang="ts" setup>
+import {ref} from 'vue';
 import PageHeader from '../page-header';
 
-export default {
-  components: {
-    PageHeader,
+const history = ref([
+  {
+    label: 'All Components',
+    name: 'home',
   },
+]);
+const title = ref('');
+const value = ref('hello');
 
-  data() {
-    return {
-      history: [
-        {
-          label: 'All Components',
-          name: 'home',
-        },
-      ],
-      title: '',
-      value: 'hello',
-    };
-  },
-
-  methods: {
-    doUpdate() {
-      this.title = this.value;
-    },
-
-    onTitleChange(title) {
-      this.title = title;
-    },
-  },
-};
+function doUpdate() {
+  title.value = value.value;
+}
+function onTitleChange(title: string) {
+  title.value = title;
+}
 </script>

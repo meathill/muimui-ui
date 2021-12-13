@@ -41,68 +41,58 @@ header.or-page-header
   alert(:message="message", :status="status", :auto-hide="autoHide")
 </template>
 
-<script>
+<script lang="ts">
+export default {
+  name: 'BluebirdUIPageHeader',
+};
+</script>
+
+<script lang="ts" setup>
+import {
+  ref,
+  watch,
+  onBeforeMount,
+} from 'vue';
 import Alert from './alert';
 import TextEditor from './text-editor';
 
-export default {
-  name: 'BluebirdUIPageHeader',
-  components: {TextEditor, Alert},
-  props: {
-    history: {
-      type: Array,
-      default: null,
-    },
-    isLoading: {
-      type: Boolean,
-      default: false,
-    },
-    status: {
-      type: Boolean,
-      default: null,
-    },
-    message: {
-      type: String,
-      default: null,
-    },
-    autoHide: {
-      type: Number,
-      default: 0,
-    },
-    title: {
-      type: String,
-      default: 'Title',
-    },
-    titleTag: {
-      type: String,
-      default: 'h1',
-    },
-    isTitleEditor: {
-      type: Boolean,
-      default: false,
-    },
-  },
-  emits: ['title-change'],
-  data() {
-    return {
-      localTitle: '',
-    };
-  },
+interface HistoryItem {
+  name: string;
+  label: string;
+  params: object;
+  current: boolean;
+}
 
-  watch: {
-    title(value) {
-      this.localTitle = value;
-    },
-  },
+interface Props {
+  history: HistoryItem[];
+  isLoading: boolean;
+  title: string;
+  status?: boolean;
+  message?: string;
+  autoHide: number;
+  titleTag: string;
+  isTitleEditor: boolean;
+}
 
-  beforeMount() {
-    this.localTitle = this.title;
-  },
+const props:Object = withDefaults(defineProps<Props>(), {
+  isLoading: false,
+  title: 'Title',
+  autoHide: 0,
+  titleTag: 'h1',
+  isTitleEditor: false,
+});
+const emit:any = defineEmits(['title-change']);
+const localTitle = ref<string>('');
 
-  methods: {
-    onTitleChange() {
-      this.$emit('title-change', this.localTitle);
-    },
-  },
-};
+watch(() => props.title, (value: string) => {
+  localTitle.value = value;
+});
+
+function onTitleChange() {
+  emit('title-change', localTitle.value);
+}
+
+onBeforeMount(() => {
+  localTitle.value = props.title;
+});
 </script>

@@ -17,57 +17,61 @@
       )
 </template>
 
-<script>
+<script lang="ts">
 export default {
   name: 'BluebirdUIAlert',
-  props: {
-    message: {
-      type: String,
-      default: null,
-    },
-    status: {
-      type: Boolean,
-      default: null,
-    },
-    autoHide: {
-      type: Number,
-      default: 0,
-    },
-  },
-  emits: ['hide'],
+}
+</script>
 
-  data() {
-    return {
-      visible: true,
-    };
-  },
+<script lang="ts" setup>
+import {
+  ref,
+  computed,
+  watch,
+  getCurrentInstance,
+} from 'vue';
 
-  computed: {
-    timeoutDuration() {
-      return Number(this.autoHide);
-    },
-  },
+interface Props {
+  message: string;
+  status: boolean;
+  autoHide: number;
+}
 
-  watch: {
-    message(value) {
-      clearTimeout(this.timeout);
-      if (value) {
-        this.visible = true;
-        if (this.timeoutDuration && this.status) {
-          this.timeout = setTimeout(() => {
-            this.visible = false;
-            this.$emit('hide', this);
-          }, this.timeoutDuration);
-        }
-      }
-    },
-  },
+const props = withDefaults(defineProps<Props>(), {
+  autoHide: 0,
+});
 
-  methods: {
-    doDismiss() {
-      this.visible = false;
-      clearTimeout(this.timeout);
-    },
-  },
-};
+const emit = defineEmits(['hide']);
+
+const visible = ref(true);
+
+const timeoutDuration = computed(() => {
+  return Number(props.autoHide);
+});
+
+let timeout:any;
+let instance = getCurrentInstance();
+watch(() => props.message, (value) => {
+  clearTimeout(timeout);
+  if (value) {
+    visible.value = true;
+    if (timeoutDuration.value && props.status) {
+      timeout = setTimeout(() => {
+        visible.value = false;
+        emit('hide', instance);
+      }, timeoutDuration.value);
+    }
+  }
+});
+
+function doDismiss() {
+  visible.value = false;
+  clearTimeout(timeout);
+}
+
+defineExpose({
+  props,
+
+  visible,
+});
 </script>

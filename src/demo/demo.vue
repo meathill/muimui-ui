@@ -6,14 +6,22 @@
   ) {{item.title}}
 </template>
 
-<script>
-import {components} from './router';
+<script lang="ts">
 export default {
   name: 'DemoView',
-  computed: {
-    localRoutes() {
-      return components.filter(({title}) => !!title);
-    },
-  },
 };
+</script>
+
+<script setup lang="ts">
+import {computed} from 'vue';
+import {components} from './router';
+
+type Route = {
+  title: string;
+  name: string;
+};
+
+const localRoutes = computed<Array<Route>>(() => {
+  return components.filter(({title}: Route) => !!title);
+});
 </script>

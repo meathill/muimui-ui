@@ -35,87 +35,94 @@ component.text-editor-static(
   slot(v-if="!localValue") (点击编辑)
 </template>
 
-<script>
-import editor from './mixins/editor';
-
+<script lang="ts">
 export default {
   name: 'BluebirdUITextEditor',
-  mixins: [editor],
+}
+</script>
 
-  props: {
-    type: {
-      type: String,
-      default: null,
-    },
-    tagName: {
-      type: String,
-      default: 'div',
-    },
-    isMultiline: {
-      type: Boolean,
-      default: false,
-    },
-    placeholder: {
-      type: String,
-      default: null,
-    },
-  },
+<script lang="ts" setup>
+import {
+  ref,
+  onMounted,
+  nextTick,
+} from 'vue';
+import useEditor, {Props as EditorProps} from './mixins/editor';
 
-  data() {
-    return {
-      isEditing: false,
+interface Props extends EditorProps {
+  tagName: string;
+  type: string;
+  isMultiline: boolean;
+  placeholder: string;
+}
 
-      style: null,
-      height: null,
-    };
-  },
+interface StyleObject {
+  fontSize: string;
+  height: string;
+  lineHeight: string;
+  color: string;
+  fontWeight: string;
+  marginBottom: string;
+}
 
-  mounted() {
-    const style = getComputedStyle(this.$el);
-    const fontSize = style.getPropertyValue('font-size');
-    const lineHeight = style.getPropertyValue('line-height');
-    const color = style.getPropertyValue('color');
-    const fontWeight = style.getPropertyValue('font-weight');
-    const marginBottom = style.getPropertyValue('margin-bottom');
-    this.style = {
-      fontSize,
-      lineHeight,
-      color,
-      fontWeight,
-      marginBottom,
-      ...this.isMultiline ? null : {
-        height: lineHeight,
-      },
-    };
-  },
+const {
+  props: baseProps,
+  localValue,
+  onChange,
+  createDefaultValue,
+} = useEditor();
 
-  methods: {
-    cancel() {
-      this.localValue = this.modelValue;
-      this.isEditing = false;
-    },
-    confirm() {
-      if (!this.isEditing) {
-        return;
-      }
-      this.isEditing = false;
-      this.onChange();
-    },
-    createDefaultValue() {
-      return '';
-    },
 
-    async startEdit() {
-      this.isEditing = true;
-      if (this.isMultiline) {
-        this.style.height = this.$el.offsetHeight + 'px';
-      }
-      await this.$nextTick();
-      this.$refs.input.focus();
-      if (!this.isMultiline) {
-        this.$refs.input.select();
-      }
+const props = withDefaults(defineProps<Props>(), {
+  ...baseProps,
+  tagName: 'div',
+});
+
+const isEditing = ref(false);
+const style = ref<StyleObject>({});
+const height = ref(null);
+const root = ref<HTMLElement>(null);
+const input = ref<HTMLInputElement>(null);
+
+onMounted(() => {
+  const _style = getComputedStyle(root.value);
+  const fontSize = _style.getPropertyValue('font-size');
+  const lineHeight = _style.getPropertyValue('line-height');
+  const color = _style.getPropertyValue('color');
+  const fontWeight = _style.getPropertyValue('font-weight');
+  const marginBottom = _style.getPropertyValue('margin-bottom');
+  style.value = {
+    fontSize,
+    lineHeight,
+    color,
+    fontWeight,
+    marginBottom,
+    ...props.isMultiline ? null : {
+      height: lineHeight,
     },
-  },
-};
+  };
+});
+
+function cancel() {
+  localValue.value = props.modelValue;
+  isEditing.value = false;
+}
+function confirm() {
+  if (!isEditing.value) {
+    return;
+  }
+  isEditing.value = false;
+  onChange();
+}
+async function startEdit() {
+  isEditing.value = true;
+  if (props.isMultiline) {
+    style.value.height = root.value.offsetHeight + 'px';
+  }
+  await nextTick();
+  input.value.focus();
+  if (!props.isMultiline) {
+    input.value.select();
+  }
+}
 </script>

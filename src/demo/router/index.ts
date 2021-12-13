@@ -5,7 +5,8 @@ import {
   createWebHashHistory,
   RouterView,
 } from 'vue-router';
-import PageHeader from '@/demo/page-header';
+import PageHeader from '@/demo/page-header.vue';
+/*
 import Toggle from '@/demo/toggle';
 import Alert from '@/demo/alert';
 import SearchField from '@/demo/search-field';
@@ -13,7 +14,21 @@ import Dropdown from '@/demo/dropdown';
 import Modal from '@/demo/modal';
 import DateTimePicker from '@/demo/date-time-picker';
 import Pagination from '@/demo/Pagination';
-import SpinButton from '@/demo/spin-button';
+import SpinButton from '@/demo/spin-button';*/
+
+interface Route {
+  path: string;
+  name: string;
+  component: any;
+  title: string;
+}
+
+export const history = [
+  {
+    label: 'All Components',
+    name: 'home',
+  },
+];
 
 export const components = [
   {
@@ -22,7 +37,7 @@ export const components = [
     component: PageHeader,
     title: 'Page Header',
   },
-  {
+  /*{
     path: 'toggle',
     name: 'toggle',
     component: Toggle,
@@ -69,7 +84,7 @@ export const components = [
     name: 'spin-button',
     component: SpinButton,
     title: 'Spin Button',
-  },
+  },*/
 ];
 
 export const routes = [

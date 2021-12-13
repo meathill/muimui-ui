@@ -8,7 +8,7 @@ module.exports = {
   },
   parser: "vue-eslint-parser",
   parserOptions: {
-    parser: "@babel/eslint-parser",
+    parser: "@typescript-eslint/parser",
     sourceType: 'module',
     ecmaVersion: 'latest',
   },
@@ -19,6 +19,7 @@ module.exports = {
   extends: [
     'eslint:recommended',
     'plugin:vue/vue3-recommended',
+    '@vue/typescript/recommended',
   ],
   globals: {
     PRODUCTION: false,
@@ -27,5 +28,9 @@ module.exports = {
     it: false,
     expect: false,
     __dirname: true,
+    widthDefaults: true,
+    defineProps: true,
+    defineEmits: true,
+    defineExpose: true,
   },
 };
