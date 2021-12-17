@@ -8,14 +8,22 @@ nav#navbar.navbar.navbar-extend-lg.navbar-dark.bg-primary
   //demo-list.col-sm-2
   router-view.col-sm-10
 
-text-editor(v-model="message")
+page-header(
+  :history="history"
+)
 </template>
 
 <script lang="ts" setup>
 import {ref} from 'vue';
-import TextEditor from '@/text-editor.vue';
+import PageHeader from '@/page-header.vue';
 //import demoList from './demo.vue';
 //import Manager from '@/mixins/modal';
 
+const history = [
+  {
+    label: 'All Components',
+    name: 'home',
+  },
+];
 const message = ref('hello world')
 </script>

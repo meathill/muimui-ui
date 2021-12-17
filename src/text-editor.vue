@@ -14,6 +14,7 @@ component(
       @blur="confirm",
       @keyup.esc="cancel",
       :style="style",
+      :placeholder="placeholder",
     )
     input.form-control(
       ref="input",
@@ -23,6 +24,7 @@ component(
       @blur="confirm",
       @keyup.esc="cancel",
       :style="style",
+      :placeholder="placeholder",
     )
 
 component.text-editor-static(
@@ -77,7 +79,7 @@ const props = withDefaults(defineProps<Props>(), {
   placeholder: 'value',
 });
 const emit = defineEmits<{
-  (e: 'update:modelValue', value: any): void;
+  (e: 'update:modelValue', value: string): void;
 }>();
 
 const {
@@ -92,7 +94,7 @@ const {
   onChange,
 } = useEditor(props, emit);
 
-const isEditing = ref(false);
+const isEditing = ref<boolean>(false);
 const style = ref<StyleObject>({
   fontSize: '',
   lineHeight: '',

@@ -21,7 +21,7 @@
 
 <script lang="ts" setup>
 import {ref} from 'vue';
-import PageHeader from '../page-header';
+import PageHeader from '@/page-header.vue';
 
 const history = ref([
   {
@@ -35,7 +35,7 @@ const value = ref('hello');
 function doUpdate() {
   title.value = value.value;
 }
-function onTitleChange(title: string) {
-  title.value = title;
+function onTitleChange(newTitle: string) {
+  title.value = newTitle;
 }
 </script>

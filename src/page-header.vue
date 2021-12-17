@@ -50,12 +50,12 @@ export default {
 <script lang="ts" setup>
 import {
   ref,
-  watch,
   onBeforeMount,
-
+  toRefs,
+  watchEffect,
 } from 'vue';
-import Alert from './alert.vue';
-import TextEditor from './text-editor.vue';
+import Alert from '@/alert.vue';
+import TextEditor from '@/text-editor.vue';
 
 interface HistoryItem {
   name: string;
@@ -66,27 +66,40 @@ interface HistoryItem {
 
 interface Props {
   history: HistoryItem[];
-  isLoading: boolean;
-  title: string;
+  isLoading?: boolean;
   status?: boolean;
   message?: string;
-  autoHide: number;
-  titleTag: string;
-  isTitleEditor: boolean;
+  title?: string;
+  autoHide?: number;
+  titleTag?: string;
+  isTitleEditor?: boolean;
 }
 
-const props:Object = withDefaults(defineProps<Props>(), {
+const props = withDefaults(defineProps<Props>(), {
   isLoading: false,
   title: 'Title',
   autoHide: 0,
   titleTag: 'h1',
   isTitleEditor: false,
 });
-const emit:any = defineEmits(['title-change']);
+const emit = defineEmits<{
+  (e: 'title-change', title: string): void;
+}>();
 const localTitle = ref<string>('');
 
-watch(() => props.title, (value: string) => {
-  localTitle.value = value;
+const {
+  history,
+  isLoading,
+  status,
+  message,
+  title,
+  autoHide,
+  titleTag,
+  isTitleEditor
+} = toRefs(props);
+
+watchEffect(() => {
+  localTitle.value = title.value;
 });
 
 function onTitleChange() {
@@ -94,6 +107,6 @@ function onTitleChange() {
 }
 
 onBeforeMount(() => {
-  localTitle.value = props.title;
+  localTitle.value = title.value;
 });
 </script>
