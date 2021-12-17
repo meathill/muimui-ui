@@ -6,8 +6,8 @@ import {
   RouterView,
 } from 'vue-router';
 import PageHeader from '@/demo/page-header.vue';
+import Toggle from '@/demo/toggle.vue';
 /*
-import Toggle from '@/demo/toggle';
 import Alert from '@/demo/alert';
 import SearchField from '@/demo/search-field';
 import Dropdown from '@/demo/dropdown';
@@ -37,13 +37,13 @@ export const components = [
     component: PageHeader,
     title: 'Page Header',
   },
-  /*{
+  {
     path: 'toggle',
     name: 'toggle',
     component: Toggle,
     title: 'Toggle',
   },
-  {
+  /*{
     path: 'alert',
     name: 'alert',
     component: Alert,

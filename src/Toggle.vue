@@ -1,5 +1,3 @@
-<!-- Copyright (C) 2020 by OpenResty Inc. All rights reserved. -->
-
 <template lang="pug">
 label.switch(:class="{'switch-disabled': isSaving || disabled}", :title="title")
   input.switch-input(
@@ -20,93 +18,92 @@ label.switch(:class="{'switch-disabled': isSaving || disabled}", :title="title")
   .alert.alert-danger.position-absolute(v-if="error") {{ error }}
 </template>
 
-<script>
+<script lang="ts">
 export default {
   name: 'MuimuiUiToggle',
-  props: {
-    modelValue: {
-      type: [Boolean, String, Number, Object],
-      default: false,
-    },
-    valueOn: {
-      type: [Boolean, String, Number, Object],
-      default: true,
-    },
-    valueOff: {
-      type: [Boolean, String, Number, Object],
-      default: false,
-    },
-    labelOn: {
-      type: String,
-      default: 'On',
-    },
-    labelOff: {
-      type: String,
-      default: 'Off',
-    },
-    id: {
-      type: String,
-      default: '',
-    },
-    isSaving: {
-      type: Boolean,
-      default: false,
-    },
-    disabled: {
-      type: Boolean,
-      default: false,
-    },
-    title: {
-      type: String,
-      default: 'toggle',
-    },
-  },
-  emits: ['update:modelValue', 'change'],
+}
+</script>
 
-  data() {
-    return {
-      defaultOnText: this.$gettext ? this.$gettext('ON') : 'ON',
-      defaultOffText: this.$gettext ? this.$gettext('OFF') : 'OFF',
-      isSuccess: null,
-      error: '',
-    };
-  },
+<script lang="ts" setup>
+import {
+  computed,
+  getCurrentInstance,
+  ref,
+  toRefs,
+  watchEffect,
+} from "vue";
 
-  computed: {
-    isChecked() {
-      return this.localValue === this.valueOn;
-    },
+interface Props {
+  modelValue: any;
+  valueOn: any;
+  valueOff: any;
+  labelOn: string;
+  labelOff: string;
+  id: string;
+  isSaving: boolean;
+  disabled: boolean;
+  title: string;
+}
 
-    labelOnText() {
-      return this.labelOn || this.defaultOnText;
-    },
-    labelOffText() {
-      return this.labelOff || this.defaultOffText;
-    },
-    localValue() {
-      return this.modelValue;
-    },
-    inputId() {
-      return this.id ? 'toggle-' + this.id : null;
-    },
-  },
+const props = withDefaults(defineProps<Props>(), {
+  modelValue: false,
+  valueOn:  true,
+  valueOff: false,
+  labelOn: 'On',
+  labelOff: 'Off',
+  id: '',
+  isSaving: false,
+  disabled: false,
+  title: 'toggle',
+});
+const emit = defineEmits<{
+  (e: 'update:modelValue', value: any): void,
+  (e: 'change', enabled:boolean, value: ReturnType<typeof getCurrentInstance>): void,
+}>();
 
-  watch: {
-    isSuccess(val) {
-      if (val) {
-        setTimeout(() => {
-          this.isSuccess = null;
-        }, 2000);
-      }
-    },
-  },
+const {
+  modelValue,
+  valueOn,
+  valueOff,
+  labelOn,
+  labelOff,
+  id,
+  isSaving,
+  disabled,
+  title,
+} = toRefs(props);
 
-  methods: {
-    onSwitch(event) {
-      const enabled = event.target.checked;
-      this.$emit('update:modelValue', enabled ? this.valueOn : this.valueOff);
-      this.$emit('change', enabled, this);
-    },
-  },
-};
+const localValue = ref<boolean>(false);
+const defaultOnText = ref<string>('ON');
+const defaultOffText = ref<string>('OFF');
+const isSuccess = ref<boolean | null>(null);
+const error = ref<string>('');
+
+const isChecked = computed(() => {
+  return localValue.value === valueOn.value;
+});
+const labelOnText = computed(() => {
+  return labelOn.value || defaultOnText.value;
+});
+const labelOffText = computed(() => {
+  return labelOff.value || defaultOffText.value;
+});
+const inputId = computed(() => {
+  return id.value ? 'toggle-' + id.value : null;
+});
+
+watchEffect(() => {
+  if (isSuccess.value) {
+    setTimeout(() => {
+      isSuccess.value = null;
+    }, 2000);
+  }
+});
+
+function onSwitch(event: Event) {
+  const enabled = (event.target as HTMLInputElement).checked;
+  const instance = getCurrentInstance();
+  emit('update:modelValue', enabled ? valueOn.value : valueOff.value);
+  emit('change', enabled, instance);
+}
 </script>

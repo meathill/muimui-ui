@@ -29,21 +29,16 @@
       label.form-check-label(for="check-false") False
 </template>
 
-<script>
-import component from '@/demo/component';
-import Toggle from '@/Toggle';
-
+<script lang="ts">
 export default {
   name: 'ToggleDemo',
-  components: {
-    Toggle,
-  },
-  mixins: [component],
+}
+</script>
 
-  data() {
-    return {
-      value: false,
-    };
-  },
-};
+<script lang="ts" setup>
+import {ref} from "vue";
+import Toggle from '@/Toggle.vue';
+import {history} from "@/demo/router";
+
+const value = ref(false);
 </script>

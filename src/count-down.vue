@@ -3,59 +3,66 @@ component(:is="tagName").cound-down {{message}}
   | {{formatted}}
 </template>
 
-<script>
+<script lang="ts">
 export default {
   name: 'MuimuiUiCountDown',
-  props: {
-    tagName: {
-      type: String,
-      default: 'div',
-    },
-    duration: {
-      type: Number,
-      default: 6,
-    },
-    message: {
-      type: String,
-      default: '',
-    },
-    countDownText: {
-      type: String,
-      default: '将于 %s 秒后跳转。',
-    },
-  },
-  emits: ['over'],
+}
+</script>
 
-  data() {
-    return {
-      left: 0,
-    };
-  },
+<script lang="ts" setup>
+import {
+  ref,
+  computed,
+  onBeforeMount,
+  onBeforeUnmount,
+  toRefs,
+} from 'vue';
 
-  computed: {
-    formatted() {
-      return this.countDownText.replace('%s', this.left);
-    },
-  },
+interface Props {
+  tagName: string;
+  duration: number;
+  message: string;
+  countDownText: string;
+}
 
-  beforeMount() {
-    this.left = this.duration;
-    this.interval = setInterval(this.countDown.bind(this), 1000);
-  },
+const props = withDefaults(defineProps<Props>(), {
+  tagName: 'div',
+  duration: 6,
+  message: '',
+  countDownText: '将于 %s 秒后跳转。',
+});
+const emit = defineEmits<{
+  (e: 'over'):void
+}>();
+const {
+  tagName,
+  duration,
+  message,
+  countDownText,
+} = toRefs(props);
 
-  beforeUnmount() {
-    clearInterval(this.interval);
-  },
+const left = ref<number>(0);
+const formatted = computed(() => {
+  return countDownText.value.replace('%s', left.value.toString());
+});
 
-  methods: {
-    countDown() {
-      if (this.left > 0) {
-        this.left -= 1;
-        return;
-      }
-      clearInterval(this.interval);
-      this.$emit('over');
-    },
-  },
-};
+type timer = ReturnType<typeof setInterval>;
+let interval!:timer;
+function countDown() {
+  if (left.value > 0) {
+    left.value -= 1;
+    return;
+  }
+  clearInterval(interval);
+  emit('over');
+}
+
+onBeforeMount(() => {
+  left.value = duration.value;
+  interval = setInterval(countDown, 1000);
+});
+
+onBeforeUnmount(() => {
+  clearInterval(interval);
+});
 </script>
