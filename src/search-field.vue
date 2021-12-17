@@ -34,7 +34,7 @@ button.search-field.search-field-button(
 import debounce from 'lodash/debounce';
 
 export default {
-  name: 'BluebirdUISearchField',
+  name: 'MuimuiUiSearchField',
   props: {
     isLoading: {
       type: Boolean,

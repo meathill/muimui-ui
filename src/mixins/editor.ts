@@ -11,21 +11,25 @@ import {
 
 export interface Props {
   modelValue: any;
-  inEdit: boolean;
+  isEditMode: boolean;
 }
 
 export interface EditorMixin {
-  props: Props;
+  emit: Function;
   localValue: any;
   onChange: Function;
   createDefaultValue: Function;
+}
+
+export const defaultProps = {
+  isEditing: false,
 }
 
 function basicCreateDefaultValue(): '' {
   return '';
 }
 
-export default function useEditor(createDefaultValue: Function = basicCreateDefaultValue):EditorMixin {
+export default function useEditor(props: Props, emit: Function, createDefaultValue: Function = basicCreateDefaultValue):EditorMixin {
   function processValue():void {
     if (!isArray(props.modelValue) && !isPlainObject(props.modelValue)) {
       localValue.value = props.modelValue ? clone(props.modelValue) : createDefaultValue();
@@ -39,10 +43,6 @@ export default function useEditor(createDefaultValue: Function = basicCreateDefa
       ? cloneDeep(localValue.value) : clone(localValue.value));
   }
 
-  const props = withDefaults(defineProps<Props>(), {
-    inEdit: true,
-  });
-  const emit = defineEmits(['update:modelValue']);
   const localValue = ref<any>(null);
 
   watch(() => props.modelValue, () => {
@@ -54,7 +54,7 @@ export default function useEditor(createDefaultValue: Function = basicCreateDefa
   });
 
   return {
-    props,
+    emit,
     localValue,
     onChange,
     createDefaultValue,

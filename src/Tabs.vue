@@ -21,7 +21,7 @@
 
 <script>
 export default {
-  name: 'BluebirdUITabs',
+  name: 'MuimuiUiTabs',
   props: {
     // effect: {type: String, default: 'fadein'},
     justified: {

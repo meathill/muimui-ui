@@ -9,7 +9,7 @@
 
 <script>
 export default {
-  name: 'BluebirdUITab',
+  name: 'MuimuiUiTab',
   props: {
     disabled: {type: Boolean, default: false},
     header: {type: String, default: null},

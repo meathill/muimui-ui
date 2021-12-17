@@ -146,7 +146,7 @@ function toMoment(date) {
 }
 
 export default {
-  name: 'BluebirdUIDateTimePicker',
+  name: 'MuimuiUiDateTimePicker',
   props: {
     modelValue: {
       type: [Number, Array, Object],

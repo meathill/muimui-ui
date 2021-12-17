@@ -29,7 +29,7 @@
 
 <script>
 export default {
-  name: 'BluebirdUIDropdown',
+  name: 'MuimuiUiDropdown',
   props: {
     tagName: {
       type: String,

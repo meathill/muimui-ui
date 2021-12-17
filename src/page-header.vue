@@ -43,7 +43,7 @@ header.or-page-header
 
 <script lang="ts">
 export default {
-  name: 'BluebirdUIPageHeader',
+  name: 'MuimuiUiPageHeader',
 };
 </script>
 
@@ -52,9 +52,10 @@ import {
   ref,
   watch,
   onBeforeMount,
+
 } from 'vue';
-import Alert from './alert';
-import TextEditor from './text-editor';
+import Alert from './alert.vue';
+import TextEditor from './text-editor.vue';
 
 interface HistoryItem {
   name: string;

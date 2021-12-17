@@ -19,7 +19,7 @@
 
 <script lang="ts">
 export default {
-  name: 'BluebirdUIAlert',
+  name: 'MuimuiUiAlert',
 }
 </script>
 
@@ -41,7 +41,9 @@ const props = withDefaults(defineProps<Props>(), {
   autoHide: 0,
 });
 
-const emit = defineEmits(['hide']);
+const emit = defineEmits<{
+  (e: 'hide', instance: any): void
+}>();
 
 const visible = ref(true);
 

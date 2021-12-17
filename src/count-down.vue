@@ -5,7 +5,7 @@ component(:is="tagName").cound-down {{message}}
 
 <script>
 export default {
-  name: 'BluebirdUICountDown',
+  name: 'MuimuiUiCountDown',
   props: {
     tagName: {
       type: String,

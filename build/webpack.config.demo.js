@@ -13,10 +13,13 @@ const demoConfig = {
   },
   plugins: config.plugins.concat([
     new HtmlWebpackPlugin({
-      template: resolve(__dirname, '../src/demo/template/index.pug'),
+      template: resolve(__dirname, '../src/demo/template/index.html'),
     }),
   ]),
   devtool: 'source-map',
+  stats: {
+    errorDetails: true,
+  }
 };
 module.exports = () => {
   return demoConfig;

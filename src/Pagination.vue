@@ -26,7 +26,7 @@ nav(aria-label="Page navigation")
 
 <script>
 export default {
-  name: 'BluebirdUIPagination',
+  name: 'MuimuiUiPagination',
   props: {
     total: {
       type: Number,

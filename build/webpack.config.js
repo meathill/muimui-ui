@@ -44,15 +44,7 @@ const config = {
       },
       {
         test: /\.pug$/,
-        oneOf: [
-          {
-            resourceQuery: /^\?vue/,
-            use: ['pug-plain-loader'],
-          },
-          {
-            use: ['pug-loader'],
-          },
-        ],
+        use: 'pug-plain-loader',
       },
       {
         test: /\.css$/,

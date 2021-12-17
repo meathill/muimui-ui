@@ -26,7 +26,8 @@ component(
     )
 
 component.text-editor-static(
-  v-else-if="inEdit",
+  v-else,
+  ref="el",
   :is="tagName",
   @click="startEdit",
   title="点击编辑",
@@ -37,7 +38,7 @@ component.text-editor-static(
 
 <script lang="ts">
 export default {
-  name: 'BluebirdUITextEditor',
+  name: 'MuimuiUiTextEditor',
 }
 </script>
 
@@ -46,10 +47,13 @@ import {
   ref,
   onMounted,
   nextTick,
+  toRefs,
 } from 'vue';
-import useEditor, {Props as EditorProps} from './mixins/editor';
+import useEditor from './mixins/editor';
 
-interface Props extends EditorProps {
+interface Props {
+  modelValue: any;
+  isEditMode: boolean;
   tagName: string;
   type: string;
   isMultiline: boolean;
@@ -58,34 +62,52 @@ interface Props extends EditorProps {
 
 interface StyleObject {
   fontSize: string;
-  height: string;
+  height?: string;
   lineHeight: string;
   color: string;
   fontWeight: string;
   marginBottom: string;
 }
 
+const props = withDefaults(defineProps<Props>(), {
+  tagName: 'div',
+  isEditMode: false,
+  type: 'text',
+  isMultiline: false,
+  placeholder: 'value',
+});
+const emit = defineEmits<{
+  (e: 'update:modelValue', value: any): void;
+}>();
+
 const {
-  props: baseProps,
+  modelValue,
+  tagName,
+  type,
+  isMultiline,
+  placeholder,
+} = toRefs(props);
+const {
   localValue,
   onChange,
-  createDefaultValue,
-} = useEditor();
-
-
-const props = withDefaults(defineProps<Props>(), {
-  ...baseProps,
-  tagName: 'div',
-});
+} = useEditor(props, emit);
 
 const isEditing = ref(false);
-const style = ref<StyleObject>({});
-const height = ref(null);
-const root = ref<HTMLElement>(null);
-const input = ref<HTMLInputElement>(null);
+const style = ref<StyleObject>({
+  fontSize: '',
+  lineHeight: '',
+  color: '',
+  fontWeight: '',
+  marginBottom: '',
+});
+const el = ref<HTMLElement>();
+const input = ref<HTMLInputElement>();
 
 onMounted(() => {
-  const _style = getComputedStyle(root.value);
+  if (!el.value) {
+    return;
+  }
+  const _style = getComputedStyle(el.value);
   const fontSize = _style.getPropertyValue('font-size');
   const lineHeight = _style.getPropertyValue('line-height');
   const color = _style.getPropertyValue('color');
@@ -97,14 +119,14 @@ onMounted(() => {
     color,
     fontWeight,
     marginBottom,
-    ...props.isMultiline ? null : {
+    ...isMultiline.value ? null : {
       height: lineHeight,
     },
   };
 });
 
 function cancel() {
-  localValue.value = props.modelValue;
+  localValue.value = modelValue.value;
   isEditing.value = false;
 }
 function confirm() {
@@ -116,13 +138,13 @@ function confirm() {
 }
 async function startEdit() {
   isEditing.value = true;
-  if (props.isMultiline) {
-    style.value.height = root.value.offsetHeight + 'px';
+  if (isMultiline.value) {
+    style.value.height = el.value?.offsetHeight + 'px';
   }
   await nextTick();
-  input.value.focus();
-  if (!props.isMultiline) {
-    input.value.select();
+  input.value?.focus();
+  if (!isMultiline.value) {
+    input.value?.select();
   }
 }
 </script>

@@ -22,7 +22,7 @@ label.switch(:class="{'switch-disabled': isSaving || disabled}", :title="title")
 
 <script>
 export default {
-  name: 'BluebirdUIToggle',
+  name: 'MuimuiUiToggle',
   props: {
     modelValue: {
       type: [Boolean, String, Number, Object],

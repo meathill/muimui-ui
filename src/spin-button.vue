@@ -14,7 +14,7 @@ button.btn.spin-button(
 
 <script>
 export default {
-  name: 'BluebirdUISpinButton',
+  name: 'MuimuiUiSpinButton',
   props: {
     type: {
       type: String,

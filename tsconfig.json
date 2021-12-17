@@ -25,5 +25,5 @@
   "exclude": [
     "node_modules"
   ],
-  "files": ["ts-shims.d.ts"]
+  "files": ["src/types/vue-shims.d.ts"]
 }
