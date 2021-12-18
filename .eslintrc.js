@@ -1,5 +1,3 @@
-// Copyright (C) 2017 by OpenResty Inc. All rights reserved.
-
 module.exports = {
   env: {
     es2021: true,

@@ -27,50 +27,50 @@
     slot
 </template>
 
-<script>
+<script lang="ts">
 export default {
   name: 'MuimuiUiDropdown',
-  props: {
-    tagName: {
-      type: String,
-      default: 'div',
-    },
-    align: {
-      type: String,
-      default: 'left',
-    },
-    to: {
-      type: Object,
-      default: null,
-    },
-    label: {
-      type: String,
-      default: 'Dropdown',
-    },
-  },
+}
+</script>
 
-  data() {
-    return {
-      show: false,
-    };
-  },
+<script lang="ts" setup>
+import {onBeforeMount, onBeforeUnmount, ref, toRefs} from "vue";
 
-  beforeMount() {
-    document.body.addEventListener('click', this.onBodyClick);
-  },
-  beforeUnmount() {
-    document.body.removeEventListener('click', this.onBodyClick);
-  },
+interface Props {
+  tagName: string;
+  align: string;
+  to?: object;
+  label: string;
+}
 
-  methods: {
-    toggle() {
-      this.show = !this.show;
-    },
-    onBodyClick({target}) {
-      if (!this.$el.contains(target)) {
-        this.show = false;
-      }
-    },
-  },
-};
+const props = withDefaults(defineProps<Props>(), {
+  tagName: 'div',
+  align: 'left',
+  label: 'Dropdown',
+});
+const {
+  tagName,
+  align,
+  label,
+  to,
+} = toRefs(props);
+const show = ref<boolean>(false);
+const root = ref<HTMLDivElement>();
+
+function toggle() {
+  show.value = !show.value;
+}
+function onBodyClick(event: MouseEvent) {
+  const target = event.target as Element;
+  if (!root.value?.contains(target)) {
+    show.value = false;
+  }
+}
+
+onBeforeMount(() => {
+  document.body.addEventListener('click', onBodyClick);
+});
+onBeforeUnmount(() => {
+  document.body.removeEventListener('click', onBodyClick);
+});
 </script>

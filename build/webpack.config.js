@@ -39,6 +39,7 @@ const config = {
         use: [
           MiniCssExtractPlugin.loader,
           'css-loader',
+          'postcss-loader',
           'stylus-loader',
         ],
       },
@@ -51,6 +52,7 @@ const config = {
         use: [
           MiniCssExtractPlugin.loader,
           'css-loader',
+          'postcss-loader',
         ],
       },
     ],

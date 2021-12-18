@@ -8,9 +8,9 @@ import {
 import PageHeader from '@/demo/page-header.vue';
 import Toggle from '@/demo/toggle.vue';
 import Alert from '@/demo/alert.vue';
+import SearchField from '@/demo/search-field.vue';
+import Dropdown from '@/demo/dropdown.vue';
 /*
-import SearchField from '@/demo/search-field';
-import Dropdown from '@/demo/dropdown';
 import Modal from '@/demo/modal';
 import DateTimePicker from '@/demo/date-time-picker';*/
 import Pagination from '@/demo/Pagination.vue';
@@ -49,7 +49,7 @@ export const components = [
     component: Alert,
     title: 'Alert',
   },
-  /*{
+  {
     path: 'search-field',
     name: 'search-field',
     component: SearchField,
@@ -61,7 +61,7 @@ export const components = [
     component: Dropdown,
     title: 'Dropdown',
   },
-  {
+  /*{
     path: 'modal',
     name: 'modal',
     component: Modal,

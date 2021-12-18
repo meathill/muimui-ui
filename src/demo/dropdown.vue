@@ -23,25 +23,19 @@
           small.pl-3 {{currentUser.lastLoginTime}}
 </template>
 
-<script>
-import Dropdown from '@/dropdown';
-import component from '@/demo/component';
-
+<script lang="ts">
 export default {
   name: 'DropdownDemo',
-  components: {
-    Dropdown,
-  },
-  mixins: [component],
+}
+</script>
 
-  data() {
-    return {
-      currentUser: {
-        email: 'meathill@openresty.com',
-        lastLoginIp: '1.2.3.4',
-        lastLoginTime: '2020-03-03',
-      },
-    };
-  },
+<script lang="ts" setup>
+import {history} from "@/demo/router";
+import Dropdown from '@/dropdown.vue';
+
+const currentUser = {
+  email: 'meathill@openresty.com',
+  lastLoginIp: '1.2.3.4',
+  lastLoginTime: '2020-03-03',
 };
 </script>

@@ -27,45 +27,34 @@
         td
 </template>
 
-<script>
-import PageHeader from '@/page-header';
-import SearchField from '@/search-field';
+<script lang="ts">
+export default {
+  name: 'SearchFieldDemo',
+};
+</script>
+
+<script lang="ts" setup>
+import {
+  computed,
+  ref,
+} from "vue";
+import {history} from "@/demo/router";
+import PageHeader from '@/page-header.vue';
+import SearchField from '@/search-field.vue';
 import {sleep} from '@/helper';
 
-export default {
-  components: {
-    PageHeader,
-    SearchField,
-  },
+const isSearching = ref<boolean>(false);
+const filter = ref<object>({
+  name: '',
+});
 
-  data() {
-    return {
-      history: [
-        {
-          label: 'All Components',
-          name: 'home',
-        },
-      ],
+const filterOutput = computed(() => {
+  return JSON.stringify(filter.value, null, '  ');
+});
 
-      isSearching: false,
-      filter: {
-        name: '',
-      },
-    };
-  },
-
-  computed: {
-    filterOutput() {
-      return JSON.stringify(this.filter, null, '  ');
-    },
-  },
-
-  methods: {
-    async refresh() {
-      this.isSearching = true;
-      await sleep(1000);
-      this.isSearching = false;
-    },
-  },
-};
+async function refresh() {
+  isSearching.value = true;
+  await sleep(1000);
+  isSearching.value = false;
+}
 </script>
