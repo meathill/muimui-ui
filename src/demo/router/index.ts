@@ -7,14 +7,14 @@ import {
 } from 'vue-router';
 import PageHeader from '@/demo/page-header.vue';
 import Toggle from '@/demo/toggle.vue';
+import Alert from '@/demo/alert.vue';
 /*
-import Alert from '@/demo/alert';
 import SearchField from '@/demo/search-field';
 import Dropdown from '@/demo/dropdown';
 import Modal from '@/demo/modal';
-import DateTimePicker from '@/demo/date-time-picker';
-import Pagination from '@/demo/Pagination';
-import SpinButton from '@/demo/spin-button';*/
+import DateTimePicker from '@/demo/date-time-picker';*/
+import Pagination from '@/demo/Pagination.vue';
+import SpinButton from '@/demo/spin-button.vue';
 
 interface Route {
   path: string;
@@ -43,13 +43,13 @@ export const components = [
     component: Toggle,
     title: 'Toggle',
   },
-  /*{
+  {
     path: 'alert',
     name: 'alert',
     component: Alert,
     title: 'Alert',
   },
-  {
+  /*{
     path: 'search-field',
     name: 'search-field',
     component: SearchField,
@@ -72,7 +72,7 @@ export const components = [
     name: 'data-time-picker',
     component: DateTimePicker,
     title: 'Date Time Picker',
-  },
+  },*/
   {
     path: 'pagination',
     name: 'pagination',
@@ -84,7 +84,7 @@ export const components = [
     name: 'spin-button',
     component: SpinButton,
     title: 'Spin Button',
-  },*/
+  },
 ];
 
 export const routes = [

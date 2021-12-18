@@ -37,42 +37,34 @@
     button.btn.btn-primary Show alert
 </template>
 
-<script>
-import component from '@/demo/component';
-import Alert from '@/alert';
-import Toggle from '@/Toggle';
-
+<script lang="ts">
 export default {
   name: 'AlertDemo',
-  components: {
-    Toggle,
-    Alert,
-  },
-  mixins: [component],
+}
+</script>
 
-  data() {
-    return {
-      timeouts: [
-        0,
-        100,
-        1000,
-        5000,
-      ],
-      message: null,
-      status: null,
-      timeout: 0,
-      value: 'hello world',
-    };
-  },
+<script lang="ts" setup>
+import {ref} from 'vue';
+import {history} from "@/demo/router";
+import Alert from '@/alert.vue';
+import Toggle from '@/Toggle.vue';
 
-  methods: {
-    doAlert() {
-      this.message = this.value;
-    },
+const timeouts = [
+  0,
+  100,
+  1000,
+  5000,
+];
+const message = ref<string | null>(null);
+const status = ref<boolean | null>(null);
+const timeout = ref<number>(0);
+const value = ref<string>('hello world');
 
-    onHide() {
-      this.message = null;
-    },
-  },
-};
+function doAlert() {
+  message.value = value.value;
+}
+
+function onHide() {
+  message.value = null;
+}
 </script>

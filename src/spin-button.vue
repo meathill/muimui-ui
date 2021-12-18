@@ -12,26 +12,31 @@ button.btn.spin-button(
   slot {{label}}
 </template>
 
-<script>
+<script lang="ts">
 export default {
   name: 'MuimuiUiSpinButton',
-  props: {
-    type: {
-      type: String,
-      default: 'button',
-    },
-    icon: {
-      type: String,
-      default: null,
-    },
-    status: {
-      type: Boolean,
-      default: false,
-    },
-    label: {
-      type: String,
-      default: 'Button',
-    },
-  },
-};
+}
+</script>
+
+<script lang="ts" setup>
+import {toRefs} from "vue";
+
+interface Props {
+  type: string;
+  icon?: string;
+  status: boolean;
+  label: string;
+}
+
+const props = withDefaults(defineProps<Props>(),  {
+  type: 'button',
+  status: false,
+  label: 'Button',
+});
+const {
+  type,
+  icon,
+  status,
+  label,
+} = toRefs(props);
 </script>

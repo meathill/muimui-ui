@@ -50,26 +50,20 @@
         )
 </template>
 
-<script>
-import component from '@/demo/component';
-import Pagination from '@/Pagination';
-import Toggle from '@/Toggle';
-
+<script lang="ts">
 export default {
   name: 'PaginationDemo',
-  components: {
-    Pagination,
-    Toggle,
-  },
-  mixins: [component],
+}
+</script>
 
-  data() {
-    return {
-      total: 100,
-      perPage: 10,
-      isLoading: false,
-      page: 1,
-    };
-  },
-};
+<script lang="ts" setup>
+import {ref} from "vue";
+import {history} from "@/demo/router";
+import Pagination from '@/Pagination.vue';
+import Toggle from '@/Toggle.vue';
+
+const total = ref<number>(100);
+const perPage = ref<number>(10);
+const isLoading = ref<boolean>(false);
+const page = ref<number>(1);
 </script>

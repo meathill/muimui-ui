@@ -34,33 +34,26 @@
         )
 </template>
 
-<script>
-import component from '@/demo/component';
-import SpinButton from '@/spin-button';
-import Toggle from '@/Toggle';
-
+<script lang="ts">
 export default {
-  components: {
-    SpinButton,
-    Toggle,
-  },
-  mixins: [component],
+  name: 'SpinButtonDemo',
+}
+</script>
 
-  data() {
-    return {
-      label: 'I am a spin button',
-      icon: 'fas fa-check',
-      status: null,
-    };
-  },
+<script lang="ts" setup>
+import {ref} from "vue";
+import {history} from "@/demo/router";
+import SpinButton from '@/spin-button.vue';
+import Toggle from '@/Toggle.vue';
 
-  methods: {
-    doAlert() {
-      this.status = true;
-      setTimeout(() => {
-        this.status = false;
-      }, 1000);
-    },
-  },
-};
+const label = ref<string>('I am a spin button');
+const icon = ref<string>('fas fa-check');
+const status = ref<boolean | null>(null);
+
+function doAlert() {
+  status.value = true;
+  setTimeout(() => {
+    status.value = false;
+  }, 1000);
+}
 </script>
