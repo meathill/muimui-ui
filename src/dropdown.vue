@@ -1,5 +1,6 @@
 <template lang="pug">
 .nav-item.dropdown(
+  ref="$el",
   :class="{show: show}",
   :is="tagName",
 )
@@ -55,14 +56,14 @@ const {
   to,
 } = toRefs(props);
 const show = ref<boolean>(false);
-const root = ref<HTMLDivElement>();
+const $el = ref<HTMLDivElement>();
 
 function toggle() {
   show.value = !show.value;
 }
 function onBodyClick(event: MouseEvent) {
   const target = event.target as Element;
-  if (!root.value?.contains(target)) {
+  if (!$el.value?.contains(target)) {
     show.value = false;
   }
 }

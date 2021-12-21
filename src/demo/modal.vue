@@ -37,98 +37,92 @@
   p value: {{value}}
 </template>
 
-<script>
-import component from '@/demo/component';
-import Toggle from '@/Toggle';
-import InputForm from './input-form';
-import {sleep} from '@/helper';
-
+<script lang="ts">
 export default {
   name: 'ModalDemo',
-  components: {
-    Toggle,
-  },
-  mixins: [component],
+}
+</script>
 
-  data() {
-    return {
-      value: null,
-      backdrop: true,
-    };
-  },
+<script lang="ts" setup>
+import {history} from "@/demo/router";
+import Toggle from '@/Toggle.vue';
+import InputForm from './input-form.vue';
+import {sleep} from '@/helper';
+import {getCurrentInstance, ref} from "vue";
 
-  methods: {
-    async doOpenModal() {
-      const {backdrop} = this;
-      try {
-        this.$root.showModal({
-          title: 'hello',
-          content: 'world',
-          backdrop,
-        });
-      } catch (e) {
-        console.log(e);
-      }
-    },
+const value = ref();
+const backdrop = ref<boolean>(true);
 
-    async doOpenComponentModal() {
-      const {backdrop} = this;
-      let modal, months;
-      try {
-        modal = this.$root.showModal({
-          title: 'hello',
-          formId: 'trial',
-          component: InputForm,
-          data: this.value,
-          backdrop,
-        });
-        ({modal, data: months} = await modal);
-      } catch (e) {
-        return;
-      }
-      modal.props.isSaving = true;
-      this.value = months;
-      await sleep();
-      modal.props.isSaving = false;
-      modal.props.status = true;
-      modal.props.message = 'Saved.';
-      setTimeout(() => {
-        this.closeModal(modal, false);
-      }, 1000);
-    },
+async function doOpenModal() {
+  try {
+    const instance = getCurrentInstance();
+    $root.showModal({
+      title: 'hello',
+      content: 'world',
+      backdrop,
+    });
+  } catch (e) {
+    console.log(e);
+  }
+}
 
-    async doOpenNoFooterModal() {
-      const {backdrop} = this;
-      try {
-        await this.$root.showModal({
-          title: 'No footer',
-          content: 'I have no footer',
-          hasFooter: false,
-          backdrop,
-        });
-      } catch (e) {
-        console.log(e);
-      }
-    },
+async function doOpenComponentModal() {
+  let modal, months;
+  try {
+    modal = this.$root.showModal({
+      title: 'hello',
+      formId: 'trial',
+      component: InputForm,
+      data: this.value,
+      backdrop,
+    });
+    ({modal, data: months} = await modal);
+  } catch (e) {
+    return;
+  }
+  modal.props.isSaving = true;
+  this.value = months;
+  await sleep();
+  modal.props.isSaving = false;
+  modal.props.status = true;
+  modal.props.message = 'Saved.';
+  setTimeout(() => {
+    this.closeModal(modal, false);
+  }, 1000);
+},
 
-    async doOpenAutoCloseComponentModal() {
-      const {backdrop} = this;
-      let modal, months;
-      try {
-        modal = this.$root.showModal({
-          title: 'hello',
-          formId: 'trial',
-          component: InputForm,
-          data: this.value,
-          closeOnConfirm: true,
-          backdrop,
-        });
-        ({modal, data: months} = await modal);
-      } catch (e) {
-        return;
-      }
-      this.value = months;
-    },
+async doOpenNoFooterModal() {
+  const {backdrop} = this;
+  try {
+    await this.$root.showModal({
+      title: 'No footer',
+      content: 'I have no footer',
+      hasFooter: false,
+      backdrop,
+    });
+  } catch (e) {
+    console.log(e);
+  }
+},
+
+async doOpenAutoCloseComponentModal() {
+  const {backdrop} = this;
+  let modal, months;
+  try {
+    modal = this.$root.showModal({
+      title: 'hello',
+      formId: 'trial',
+      component: InputForm,
+      data: this.value,
+      closeOnConfirm: true,
+      backdrop,
+    });
+    ({modal, data: months} = await modal);
+  } catch (e) {
+    return;
+  }
+  this.value = months;
+},
   },
 };
 </script>

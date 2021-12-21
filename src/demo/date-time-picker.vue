@@ -99,46 +99,40 @@
       )
 </template>
 
-<script>
-import moment from 'moment';
-import component from '@/demo/component';
-import DateTimePicker from '@/DateTimePicker';
-
+<script lang="ts">
 export default {
-  components: {
-    DateTimePicker,
-  },
-  mixins: [component],
+  name: 'DateTimePickerDemo',
+}
+</script>
 
-  data() {
-    const minDateTime = moment().add(-7, 'days');
-    const maxDateTime = moment().add(7, 'days');
-    return {
-      value: Date.now(),
-      value2: Date.now(),
-      value3: Date.now(),
-      value4: [
-        Date.now(),
-        Date.now(),
-      ],
-      value5: Date.now(),
-      minDateTime,
-      maxDateTime,
-      disabledComponent: false,
-    };
-  },
+<script lang="ts" setup>
+import moment from 'moment';
+import {history} from "@/demo/router";
+import DateTimePicker from '@/DateTimePicker.vue';
+import {computed, ref} from "vue";
 
-  computed: {
-    disabled() {
-      const today = new Date();
-      const yesterday = moment().add(-1, 'days');
-      const tomorrow = moment().add(1, 'days');
-      const lastDayOfLastMonth = moment().add(-1 * today.getDate() - 1, 'days');
-      const firstDayOfNextMonth = moment()
-        .add(1, 'months')
-        .add(-1 * today.getDate() + 1, 'days');
-      return [yesterday, tomorrow, lastDayOfLastMonth, firstDayOfNextMonth];
-    },
-  },
-};
+type tMoment = ReturnType<typeof moment>;
+const minDateTime = ref<tMoment>(moment().add(-7, 'days'));
+const maxDateTime = ref<tMoment>(moment().add(7, 'days'));
+const now = Date.now();
+const value = ref<number>(now);
+const value2 = ref<number>(now);
+const value3 = ref<number>(now);
+const value4 = ref<number[]>([
+  now,
+  now,
+]);
+const value5 = ref<number>(now);
+const disabledComponent = ref<boolean>(false);
+
+const disabled = computed<tMoment[]>(() => {
+  const today = new Date();
+  const yesterday = moment().add(-1, 'days');
+  const tomorrow = moment().add(1, 'days');
+  const lastDayOfLastMonth = moment().add(-1 * today.getDate() - 1, 'days');
+  const firstDayOfNextMonth = moment()
+    .add(1, 'months')
+    .add(-1 * today.getDate() + 1, 'days');
+  return [yesterday, tomorrow, lastDayOfLastMonth, firstDayOfNextMonth];
+});
 </script>

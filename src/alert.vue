@@ -32,12 +32,14 @@ import {
 } from 'vue';
 
 interface Props {
-  message: string;
-  status: boolean;
+  message: Nullable<string>;
+  status: Nullable<boolean>;
   autoHide: number;
 }
 
 const props = withDefaults(defineProps<Props>(), {
+  message: null,
+  status: null,
   autoHide: 0,
 });
 

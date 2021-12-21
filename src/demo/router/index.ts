@@ -11,8 +11,8 @@ import Alert from '@/demo/alert.vue';
 import SearchField from '@/demo/search-field.vue';
 import Dropdown from '@/demo/dropdown.vue';
 /*
-import Modal from '@/demo/modal';
-import DateTimePicker from '@/demo/date-time-picker';*/
+import Modal from '@/demo/modal';*/
+import DateTimePicker from '@/demo/date-time-picker.vue';
 import Pagination from '@/demo/Pagination.vue';
 import SpinButton from '@/demo/spin-button.vue';
 
@@ -66,13 +66,13 @@ export const components = [
     name: 'modal',
     component: Modal,
     title: 'Modal',
-  },
+  },*/
   {
     path: 'date-time-picker',
     name: 'data-time-picker',
     component: DateTimePicker,
     title: 'Date Time Picker',
-  },*/
+  },
   {
     path: 'pagination',
     name: 'pagination',

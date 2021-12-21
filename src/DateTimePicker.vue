@@ -1,5 +1,8 @@
 <template lang="pug">
-.edge-date-time-picker(:class="{'disabled': disabled}")
+.muimui-date-time-picker(
+  ref="root",
+  :class="{'disabled': disabled}",
+)
   input.form-control.date-time-picker-input(
     readonly,
     :value="formatted",
@@ -10,7 +13,7 @@
     :style="{width:width}",
     @click="inputClick",
   )
-  button.close(v-if="clearButton && localValue", type="button", @click="localValue = ''")
+  button.close(v-if="clearButton && localValue", type="button", @click="doClear")
     span &times;
 
   .date-time-picker-popup(
@@ -33,7 +36,7 @@
       .date-time-picker-dateRange
         span(
           v-for="d in dateRange",
-          :class="d.sclass",
+          :class="d.sClass",
           @click="daySelect(d)",
         ) {{d.text}}
 
@@ -70,9 +73,9 @@
       .date-time-picker-monthRange.decadeRange
         span(
           v-for="decade in decadeRange",
-          :class="{'date-time-picker-dateRange-item-active':baseTime.year() === decade.text}",
-          v-text="decade.text",
-          @click.stop="yearSelect(decade.text)",
+          :class="{'date-time-picker-dateRange-item-active': baseTime.year() === decade}",
+          v-text="decade",
+          @click.stop="yearSelect(decade)",
         )
 
     .right(v-if="displayTimePart")
@@ -133,441 +136,479 @@
         ) {{n - 1}}
 </template>
 
-<script>
-import moment from 'moment';
-import locale from 'moment/dist/locale/en-gb';
+<script lang="ts">
+export default {
+  name: 'MuimuiUiDateTimePicker',
+}
+</script>
 
-function toDateString(date) {
+<script lang="ts" setup>
+import isArray from "lodash/isArray";
+import isString from 'lodash/isString';
+import moment from 'moment';
+// @ts-ignore
+import defaultLocal from 'moment/dist/locale/en-gb';
+import {
+  computed,
+  onBeforeMount,
+  onBeforeUnmount,
+  ref,
+  toRefs,
+  watch,
+} from "vue";
+import DurationConstructor = moment.unitOfTime.DurationConstructor;
+
+type Moment = ReturnType<typeof moment>;
+type DateDisplayItem = {
+  text: string;
+  date: Date;
+  sClass?: string;
+};
+type DateRange = [Moment] | [Moment, Moment];
+type DateTypes = Date | Moment | string;
+type RangeIndex = 0 | 1;
+type Momentable = Nullable<Date | Moment | string | number>;
+interface Props {
+  modelValue?: number | number[] | Date | Date[] | string | string[];
+  format: string;
+  disabled: boolean;
+  disabledDates?: DateTypes[] | string;
+  disabledDaysOfWeek?: number[] | string;
+  width?: string;
+  clearButton: boolean;
+  lang: string;
+  name: string;
+  id?: string;
+  placeholder?: string;
+  locale?: any;
+  timeText: string;
+  hourText: string;
+  minuteText: string;
+  secondText: string;
+  isRange: boolean;
+  separator: string;
+  minDateTime?: Momentable;
+  maxDateTime?: Momentable;
+}
+interface YearMonth {
+  year: number;
+  month: number;
+}
+
+function toDateString(date: DateTypes):string {
+  if (isString(date)) {
+    return date;
+  }
   date = date instanceof Date ? date : date.toDate();
   return `${date.getFullYear()}-${date.getMonth()}-${date.getDate()}`;
 }
-function toMoment(date) {
+function toMoment(date: Date | Moment | number | string):Moment {
   return moment(date);
 }
 
-export default {
-  name: 'MuimuiUiDateTimePicker',
-  props: {
-    modelValue: {
-      type: [Number, Array, Object],
-      default: Date.now(),
-    },
-    format: {
-      type: String,
-      default: 'YYYY-MM-DD HH:mm:ss',
-    },
-    disabled: {
-      type: Boolean,
-      default: false,
-    },
-    disabledDates: {
-      type: Array, // Array.<moment>
-      default: null,
-    },
-    disabledDaysOfWeek: {
-      type: Array,
-      default() {
-        return [];
-      },
-    },
-    width: {
-      type: String,
-      default: null,
-    },
-    clearButton: {type: Boolean, default: false},
-    lang: {type: String, default: navigator.language},
-    name: {
-      type: String,
-      default: null,
-    },
-    id: {
-      type: String,
-      default: null,
-    },
-    placeholder: {
-      type: String,
-      default: null,
-    },
-    locale: {
-      type: Object,
-      default: null,
-    },
-    timeText: {
-      type: String,
-      default: 'Time',
-    },
-    hourText: {
-      type: String,
-      default: 'Hour',
-    },
-    minuteText: {
-      type: String,
-      default: 'Minute',
-    },
-    secondText: {
-      type: String,
-      default: 'Second',
-    },
-    isRange: {
-      type: Boolean,
-      default: false,
-    },
-    separator: {
-      type: String,
-      default: ' ~ ',
-    },
-    minDateTime: {
-      type: [Number, Object, Date],
-      default: null,
-    },
-    maxDateTime: {
-      type: [Number, Object, Date],
-      default: null,
-    },
-  },
-  emits: ['update:modelValue'],
-  data() {
-    return {
-      localValue: null,
-      current: 0,
-      baseTime: null,
-      dateRange: [],
-      decadeRange: [],
-      displayPopup: false,
-      displayDayView: true,
-      displayMonthView: false,
-      displayYearView: false,
-      displayTimePart: true,
-      displayTimeView: true,
-      displayHourView: false,
-      displayMinuteView: false,
-      displaySecondView: false,
+const now = Date.now();
+const m = moment();
+const props = withDefaults(defineProps<Props>(), {
+  modelValue: undefined,
+  format: 'YYYY-MM-DD HH:mm:ss',
+  disabled: false,
+  disabledDates: undefined,
+  disabledDaysOfWeek: undefined,
+  clearButton: false,
+  lang: navigator.language,
+  timeText: 'Time',
+  hourText: 'Hour',
+  minuteText: 'Minute',
+  secondText: 'Second',
+  isRange: false,
+  separator: ' ~ ',
+  minDateTime: null,
+  maxDateTime: null,
+});
+const emit = defineEmits<{
+  (e:'update:modelValue', value:number | number[]):void,
+}>();
+const {
+  modelValue,
+  format,
+  disabled,
+  disabledDates,
+  disabledDaysOfWeek,
+  width,
+  clearButton,
+  lang,
+  name,
+  id,
+  placeholder,
+  locale,
+  timeText,
+  hourText,
+  minuteText,
+  secondText,
+  isRange,
+  separator,
+} = toRefs(props);
+const minDateTime = ref<DateTypes>(m);
+const maxDateTime = ref<DateTypes>(m);
+if (!modelValue.value) {
+  modelValue.value = now;
+}
+const localValue = ref<DateRange>([m, m]);
+const current = ref<RangeIndex>(0);
+const baseTime = ref<Moment>(m);
+const dateRange = ref<DateDisplayItem[]>([]);
+const decadeRange = ref<number[]>([]);
+const displayPopup = ref<boolean>(false);
+const displayDayView = ref<boolean>(true);
+const displayMonthView = ref<boolean>(false);
+const displayYearView = ref<boolean>(false);
+const displayTimePart = ref<boolean>(true);
+const displayTimeView = ref<boolean>(true);
+const displayHourView = ref<boolean>(false);
+const displayMinuteView = ref<boolean>(false);
+const displaySecondView = ref<boolean>(false);
 
-      hour: '',
-      minute: '',
-      second: '',
-      year: '',
-      month: '',
-      formatted: '',
-      dayHeader: '',
-    };
-  },
-  computed: {
-    localLocale() {
-      return this.locale || locale;
-    },
-    localDisabledDates() {
-      return this.disabledDates ? this.disabledDates.map(date => {
-        return toDateString(date);
-      }) : [];
-    },
-    disabledDaysArray() {
-      return this.disabledDaysOfWeek.map(d => parseInt(d, 10));
-    },
-    localRangeStart() {
-      return this.isRange
-        ? this.localValue[0].clone().add(-1, 'days')
-        : toMoment(this.minDateTime).add(-1, 'days');
-    },
-    localRangeEnd() {
-      return this.isRange ? this.localValue[1] : toMoment(this.maxDateTime);
-    },
-    hasSecond() {
-      return /s{1,2}/.test(this.format);
-    },
-  },
-  watch: {
-    modelValue() {
-      this.processValue();
-    },
-    minDateTime() {
-      if (this.displayDayView) {
-        this.getDateRange();
-      }
-    },
-    maxDateTime() {
-      if (this.displayDayView) {
-        this.getDateRange();
-      }
-    },
-    disabled(val) {
-      if (val) {
-        this.close();
-      }
-    },
-  },
-  beforeMount() {
-    this.processValue();
-    this.update(false);
-    this.displayDayView = /[YyMD]/.test(this.format);
-    this.displayTimePart = /[HhmsS]/.test(this.format);
-    this._blur = e => {
-      if (!this.$el.contains(e.target)) {
-        this.close();
-      }
-    };
-    window.addEventListener('click', this._blur);
-    this.getDateRange();
-  },
-  beforeUnmount() {
-    window.removeEventListener('click', this._blur);
-  },
-  methods: {
-    close() {
-      this.displayPopup = false;
-    },
-    inputClick({target}) {
-      if (!this.disabled) {
-        if (this.isRange) {
-          const pos = target.selectionStart;
-          const mid = target.value.indexOf(this.separator);
-          if (pos < mid) {
-            target.setSelectionRange(0, mid);
-            this.current = 0;
-          } else if (pos > mid + 3) {
-            target.setSelectionRange(mid + 3, target.value.length);
-            this.current = 1;
-          }
-          this.updateBaseTime();
-        }
-        this.displayPopup = true;
-      }
-    },
-    preNextDecadeClick(dir = 1) {
-      this.baseTime.add(dir * 10, 'years');
-      this.getDateRange();
-    },
-    preNextMonthClick(dir = 1) {
-      this.baseTime.add(dir, 'month');
-      this.month = this.baseTime.month();
-      this.dayHeader = this.baseTime.format('MMM YYYY');
-      this.getDateRange();
-    },
-    preNextYearClick(dir) {
-      this.baseTime.add(dir, 'year');
-      this.getDateRange();
-      this.year = this.baseTime.year();
-    },
-    yearSelect(year) {
-      this.displayYearView = false;
-      this.displayMonthView = true;
-      this.baseTime.year(year);
-      this.year = this.baseTime.year();
-    },
-    monthSelect(index) {
-      this.displayMonthView = false;
-      this.displayDayView = true;
-      this.baseTime.month(index);
-      this.month = index;
-      this.getDateRange();
-      this.dayHeader = this.baseTime.format('MMM YYYY');
-    },
-    daySelect(day) {
-      if (day.sclass === 'date-time-picker-item-disable') {
-        return false;
-      }
+const hour = ref<string>('');
+const minute = ref<string>('');
+const second = ref<string>('');
+const year = ref<number>();
+const month = ref<number>();
+const formatted = ref<string>('');
+const dayHeader = ref<string>('');
 
-      const {date} = day;
-      date.setHours(this.baseTime.hour());
-      date.setMinutes(this.baseTime.minute());
-      date.setSeconds(this.baseTime.second());
-      this.baseTime.year(date.getFullYear());
-      this.baseTime.month(date.getMonth());
-      this.baseTime.date(date.getDate());
-      this.update();
-      this.getDateRange();
-    },
-    selectHour(hour) {
-      this.baseTime.hour(hour);
-      this.update();
-      this.displayHourView = false;
-      this.displayTimeView = true;
-    },
-    selectMinute(minute) {
-      this.baseTime.minute(minute);
-      this.update();
-      this.displayMinuteView = false;
-      this.displayTimeView = true;
-    },
-    selectSecond(second) {
-      this.baseTime.second(second);
-      this.update();
-      this.displaySecondView = false;
-      this.displayTimeView = true;
-    },
-    switchMonthView() {
-      this.displayDayView = false;
-      this.displayMonthView = true;
-    },
-    switchDecadeView() {
-      this.displayMonthView = false;
-      this.displayYearView = true;
-    },
-    switchHourView() {
-      this.displayTimeView = this.displayMinuteView = this.displaySecondView = false;
-      this.displayHourView = true;
-    },
-    switchMinuteView() {
-      this.displayTimeView = this.displayHourView = this.displaySecondView = false;
-      this.displayMinuteView = true;
-    },
-    switchSecondView() {
-      this.displayTimeView = this.displayHourView = this.displayMinuteView = false;
-      this.displaySecondView = true;
-    },
-    getYearMonth(year, month) {
-      if (month > 11) {
-        year++;
-        month = 0;
-      } else if (month < 0) {
-        year--;
-        month = 11;
-      }
-      return {year: year, month: month};
-    },
-    getDayCount(year, month) {
-      const dict = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
-      if (month === 1) {
-        if ((year % 400 === 0) || (year % 4 === 0 && year % 100 !== 0)) {
-          return 29;
-        }
-      }
-      return dict[month];
-    },
-    getDateRange() {
-      this.decadeRange = [];
-      const year = this.baseTime.year();
-      const month = this.baseTime.month();
-      const todayStr = toDateString(this.localValue[this.current]);
-      const firstYearOfDecade = (year / 10 >> 0) * 10 - 1;
-      for (let i = 0; i < 12; i++) {
-        this.decadeRange.push({
-          text: firstYearOfDecade + i,
-        });
-      }
-      if (this.displayYearView) {
-        return;
-      }
+const root = ref<HTMLDivElement>();
 
-      this.dateRange = [];
-      const currMonthFirstDay = new Date(year, month, 1);
-      let firstDayWeek = currMonthFirstDay.getDay() + 1;
-      if (firstDayWeek === 0) {
-        firstDayWeek = 7;
-      }
-      const dayCount = this.getDayCount(year, month);
-      if (firstDayWeek > 1) {
-        const preMonth = this.getYearMonth(year, month - 1);
-        const prevMonthDayCount = this.getDayCount(preMonth.year, preMonth.month);
-        for (let i = 1; i < firstDayWeek; i++) {
-          const dayText = prevMonthDayCount - firstDayWeek + i + 1;
-          const date = new Date(preMonth.year, preMonth.month, dayText);
-          let sclass = this.getDateItemClass({
-            date,
-            todayStr,
-            className: 'date-time-picker-item-gray',
-          });
-          this.dateRange.push({text: dayText, date, sclass});
-        }
-      }
+const localLocale = computed(() => {
+  return locale.value || defaultLocal;
+});
+const localDisabledDates = computed<string[]>(() => {
+  if (!disabledDates.value) return [];
+  const {value} = disabledDates;
+  let arr = isString(value) ? value.replace(/(^\[|]$)/g, '').split(',') : value;
+  return arr.map((item:DateTypes) => {
+    return toDateString(item);
+  });
+});
+const disabledDaysArray = computed<number[]>(() => {
+  if (!disabledDaysOfWeek.value) return [];
+  if (isString(disabledDaysOfWeek.value)) {
+    return disabledDaysOfWeek.value
+      .replace(/(^\[|]$)/g, '')
+      .split(',').map((day:string) => {
+        return parseInt(day, 10);
+      });
+  }
+  return disabledDaysOfWeek.value;
+});
+const localRangeStart = computed<Moment>(() => {
+  return isRange.value
+    ? localValue.value[0].clone().add(-1, 'days')
+    : toMoment(minDateTime.value).add(-1, 'days');
+});
+const localRangeEnd = computed<Moment>(() => {
+  return isRange.value && localValue.value[1] ? localValue.value[1] : toMoment(maxDateTime.value);
+});
+const hasSecond = computed<boolean>(() => {
+  return /s{1,2}/.test(format.value);
+});
 
-      for (let i = 1; i <= dayCount; i++) {
-        const date = new Date(year, month, i);
-        let sclass = this.getDateItemClass({
-          date,
-          todayStr,
-        });
-        this.dateRange.push({text: i, date, sclass});
+function doClear() {
+  emit('update:modelValue', 0);
+  formatted.value = '';
+}
+function close() {
+  displayPopup.value = false;
+}
+function inputClick(event:InputEvent) {
+  const target = event.target as HTMLInputElement;
+  if (!disabled.value) {
+    if (isRange.value) {
+      const pos = target.selectionStart || 0;
+      const mid = target.value.indexOf(separator.value);
+      if (pos < mid) {
+        target.setSelectionRange(0, mid);
+        current.value = 0;
+      } else if (pos > mid + 3) {
+        target.setSelectionRange(mid + 3, target.value.length);
+        current.value = 1;
       }
+      updateBaseTime();
+    }
+    displayPopup.value = true;
+  }
+}
+function preNextDecadeClick(dir:number = 1) {
+  baseTime.value.add(dir * 10, 'years');
+  getDateRange();
+}
+function preNextMonthClick(dir:number = 1) {
+  baseTime.value.add(dir, 'month');
+  month.value = baseTime.value.month();
+  dayHeader.value = baseTime.value.format('MMM YYYY');
+  getDateRange();
+}
+function preNextYearClick(dir:number = 1) {
+  baseTime.value.add(dir, 'year');
+  getDateRange();
+  year.value = baseTime.value.year();
+}
+function yearSelect(toYear:number) {
+  displayYearView.value = false;
+  displayMonthView.value = true;
+  baseTime.value.year(toYear);
+  year.value = baseTime.value.year();
+}
+function monthSelect(toMonth:number) {
+  displayMonthView.value = false;
+  displayDayView.value = true;
+  baseTime.value.month(toMonth);
+  month.value = toMonth;
+  getDateRange();
+  dayHeader.value = baseTime.value.format('MMM YYYY');
+}
+function daySelect(day:DateDisplayItem) {
+  if (day.sClass === 'date-time-picker-item-disable') {
+    return false;
+  }
 
-      if (this.dateRange.length < 42) {
-        const nextMonthNeed = 42 - this.dateRange.length;
-        const nextMonth = this.getYearMonth(year, month + 1);
+  const {date} = day;
+  date.setHours(baseTime.value.hour());
+  date.setMinutes(baseTime.value.minute());
+  date.setSeconds(baseTime.value.second());
+  baseTime.value.year(date.getFullYear());
+  baseTime.value.month(date.getMonth());
+  baseTime.value.date(date.getDate());
+  update();
+  getDateRange();
+}
+function selectHour(hour:number) {
+  baseTime.value.hour(hour);
+  update();
+  displayHourView.value = false;
+  displayTimeView.value = true;
+}
+function selectMinute(minute:number) {
+  baseTime.value.minute(minute);
+  update();
+  displayMinuteView.value = false;
+  displayTimeView.value = true;
+}
+function selectSecond(second:number) {
+  baseTime.value.second(second);
+  update();
+  displaySecondView.value = false;
+  displayTimeView.value = true;
+}
+function switchMonthView() {
+  displayDayView.value = false;
+  displayMonthView.value = true;
+}
+function switchDecadeView() {
+  displayMonthView.value = false;
+  displayYearView.value = true;
+}
+function switchHourView() {
+  displayTimeView.value = displayMinuteView.value = displaySecondView.value = false;
+  displayHourView.value = true;
+}
+function switchMinuteView() {
+  displayTimeView.value = displayHourView.value = displaySecondView.value = false;
+  displayMinuteView.value = true;
+}
+function switchSecondView() {
+  displayTimeView.value = displayHourView.value = displayMinuteView.value = false;
+  displaySecondView.value = true;
+}
+function getYearMonth(year:number, month:number):YearMonth {
+  if (month > 11) {
+    year++;
+    month = 0;
+  } else if (month < 0) {
+    year--;
+    month = 11;
+  }
+  return {year, month};
+}
+function getDayCount(year:number, month:number):number {
+  const dict:number[] = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+  if (month === 1) {
+    if ((year % 400 === 0) || (year % 4 === 0 && year % 100 !== 0)) {
+      return 29;
+    }
+  }
+  return dict[month];
+}
+function getDateRange() {
+  decadeRange.value = [];
+  const year = baseTime.value.year();
+  const month = baseTime.value.month();
+  const text = toDateString(localValue.value[current.value] as Moment);
+  const firstYearOfDecade:number = (year / 10 >> 0) * 10 - 1;
+  for (let i = 0; i < 12; i++) {
+    decadeRange.value.push(firstYearOfDecade + i);
+  }
+  if (displayYearView.value) {
+    return;
+  }
 
-        for (let i = 1; i <= nextMonthNeed; i++) {
-          const date = new Date(nextMonth.year, nextMonth.month, i);
-          let sclass = this.getDateItemClass({
-            date,
-            todayStr,
-            className: 'date-time-picker-item-gray',
-          });
-          this.dateRange.push({text: i, date, sclass});
-        }
-      }
-    },
-    getDateItemClass({date, todayStr, className = ''}) {
-      const {
-        disabledDaysArray,
-        localDisabledDates,
-        localRangeStart,
-        localRangeEnd,
-        current,
-        isRange,
-      } = this;
-      const str = toDateString(date);
-      const isOutOfRange = isRange
-        ? date > localRangeEnd && current === 0 || date < localRangeStart && current === 1
-        : date < localRangeStart || date > localRangeEnd;
-      if (disabledDaysArray.indexOf(date.getDay()) > -1
-          || localDisabledDates.indexOf(str) !== -1
-          || isOutOfRange) {
-        className = 'date-time-picker-item-disable';
-      }
-      if (str === todayStr
-          || isRange && date >= localRangeStart && date < localRangeEnd) {
-        className = 'date-time-picker-dateRange-item-active';
-      }
-      return className;
-    },
-    stringifyDecadeHeader() {
-      const year = this.baseTime.year();
-      const firstYearOfDecade = (year / 10 >> 0) * 10;
-      const lastYearOfDecade = firstYearOfDecade + 10;
-      return firstYearOfDecade + '-' + lastYearOfDecade;
-    },
-    update(isUpdate = true) {
-      this.formatted = this.localValue.map(time => time.format(this.format)).join(this.separator);
-      if (isUpdate) {
-        this.localValue[this.current] = this.baseTime.clone();
-        const value = this.localValue.map(time => time.valueOf());
-        this.$emit('update:modelValue', this.isRange ? value : value[0]);
-      } else {
-        this.updateBaseTime();
-      }
-    },
-    updateBaseTime() {
-      const value = this.localValue[this.current];
-      this.baseTime = value.clone();
-      this.dayHeader = this.baseTime.format('MMM YYYY');
-      this.year = this.baseTime.year();
-      this.month = this.baseTime.month();
-      this.hour = this.baseTime.format('HH');
-      this.minute = this.baseTime.format('mm');
-      this.second = this.baseTime.format('ss');
-      if (this.displayDayView) {
-        this.getDateRange();
-      }
-    },
-    increase(key) {
-      this.baseTime.add(1, key);
-      this.update();
-    },
-    decrease(key) {
-      this.baseTime.add(-1, key);
-      this.update();
-    },
-    processValue() {
-      if (this.isRange) {
-        const value = [];
-        for (let i = 0; i < 2; i++) {
-          value.push(toMoment(this.modelValue[i] || new Date()));
-        }
-        this.localValue = value;
-      } else {
-        this.localValue = [toMoment(this.modelValue || new Date())];
-      }
-      this.update(false);
-    },
-  },
-};
+  dateRange.value = [];
+  const currMonthFirstDay = new Date(year, month, 1);
+  let firstDayWeek = currMonthFirstDay.getDay() + 1;
+  if (firstDayWeek === 0) {
+    firstDayWeek = 7;
+  }
+  const dayCount = getDayCount(year, month);
+  if (firstDayWeek > 1) {
+    const preMonth = getYearMonth(year, month - 1);
+    const prevMonthDayCount = getDayCount(preMonth.year, preMonth.month);
+    for (let i = 1; i < firstDayWeek; i++) {
+      const day = prevMonthDayCount - firstDayWeek + i + 1;
+      const date = new Date(preMonth.year, preMonth.month, day);
+      let sClass = getDateItemClass({
+        date,
+        text,
+        sClass: 'date-time-picker-item-gray',
+      });
+      dateRange.value.push({text: day.toString(), date, sClass});
+    }
+  }
+
+  for (let i = 1; i <= dayCount; i++) {
+    const date = new Date(year, month, i);
+    let sClass = getDateItemClass({
+      date,
+      text,
+    });
+    dateRange.value.push({text: i.toString(), date, sClass});
+  }
+
+  if (dateRange.value.length < 42) {
+    const nextMonthNeed = 42 - dateRange.value.length;
+    const nextMonth = getYearMonth(year, month + 1);
+
+    for (let i = 1; i <= nextMonthNeed; i++) {
+      const date = new Date(nextMonth.year, nextMonth.month, i);
+      let sClass = getDateItemClass({
+        date,
+        text,
+        sClass: 'date-time-picker-item-gray',
+      });
+      dateRange.value.push({text: i.toString(), date, sClass});
+    }
+  }
+}
+function getDateItemClass({date, text, sClass = ''}:DateDisplayItem) {
+  let className = sClass;
+  const str = toDateString(date);
+  const isOutOfRange = isRange.value
+    ? date.valueOf() > localRangeEnd.value.valueOf() && current.value === 0
+      || date.valueOf() < localRangeStart.value.valueOf() && current.value === 1
+    : date.valueOf() < localRangeStart.value.valueOf()
+      || date.valueOf() > localRangeEnd.value.valueOf();
+  if (disabledDaysArray.value.indexOf(date.getDay()) > -1
+      || localDisabledDates.value.indexOf(str) !== -1
+      || isOutOfRange) {
+    className = 'date-time-picker-item-disable';
+  }
+  if (str === text
+      || isRange
+         && date.valueOf() >= localRangeStart.value.valueOf()
+         && date.valueOf() < localRangeEnd.value.valueOf()) {
+    className = 'date-time-picker-dateRange-item-active';
+  }
+  return className;
+}
+function stringifyDecadeHeader() {
+  const year = baseTime.value.year();
+  const firstYearOfDecade = (year / 10 >> 0) * 10;
+  const lastYearOfDecade = firstYearOfDecade + 10;
+  return firstYearOfDecade + '-' + lastYearOfDecade;
+}
+function update(isUpdate = true) {
+  formatted.value = localValue.value.map(time => time.format(format.value)).join(separator.value);
+  if (isUpdate) {
+    localValue.value[current.value] = baseTime.value.clone();
+    const value = localValue.value.map(time => time.valueOf());
+    emit('update:modelValue', isRange.value ? value : value[0]);
+  } else {
+    updateBaseTime();
+  }
+}
+function updateBaseTime() {
+  const value = localValue.value[current.value];
+  if (!value) return;
+  baseTime.value = value.clone();
+  dayHeader.value = baseTime.value.format('MMM YYYY');
+  year.value = baseTime.value.year();
+  month.value = baseTime.value.month();
+  hour.value = baseTime.value.format('HH');
+  minute.value = baseTime.value.format('mm');
+  second.value = baseTime.value.format('ss');
+  if (displayDayView.value) {
+    getDateRange();
+  }
+}
+function increase(key:DurationConstructor) {
+  baseTime.value.add(1, key);
+  update();
+}
+function decrease(key:DurationConstructor) {
+  baseTime.value.add(-1, key);
+  update();
+}
+function processValue() {
+  if (isRange.value) {
+    let start;
+    let end;
+    if (isArray(modelValue.value)) {
+      ([start, end] = modelValue.value);
+    } else {
+      start = modelValue.value;
+      end = modelValue.value;
+    }
+    localValue.value = [toMoment(start), toMoment(end)];
+  } else {
+    const value = isArray(modelValue.value) ? modelValue.value[0] : modelValue.value;
+    localValue.value = [toMoment(value || new Date())];
+  }
+  update(false);
+}
+
+watch(modelValue, () => {
+  processValue();
+});
+watch(minDateTime, () => {
+  if (displayDayView.value) {
+    getDateRange();
+  }
+});
+watch(maxDateTime, () => {
+  if (displayDayView.value) {
+    getDateRange();
+  }
+});
+watch(disabled, (val) => {
+  if (val) {
+    close();
+  }
+});
+
+let onBlur:Nullable<FocusHandler> = null;
+onBeforeMount(() => {
+  processValue();
+  update(false);
+  displayDayView.value = /[YyMD]/.test(format.value);
+  displayTimePart.value = /[HhmsS]/.test(format.value);
+  onBlur = (e:FocusEvent) => {
+    if (!(root.value as HTMLElement).contains(e.target as HTMLElement)) {
+      close();
+    }
+  };
+  window.addEventListener('click', onBlur);
+  getDateRange();
+});
+onBeforeUnmount(() => {
+  window.removeEventListener('click', onBlur as FocusHandler);
+  onBlur = null;
+});
 </script>
