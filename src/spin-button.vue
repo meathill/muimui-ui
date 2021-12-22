@@ -22,10 +22,10 @@ export default {
 import {toRefs} from "vue";
 
 interface Props {
-  type: string;
+  type?: string;
   icon?: string;
-  status: boolean;
-  label: string;
+  status?: boolean;
+  label?: string;
 }
 
 const props = withDefaults(defineProps<Props>(),  {

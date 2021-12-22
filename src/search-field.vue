@@ -48,14 +48,15 @@ import {
 
 interface Props {
   isLoading: boolean;
-  onlySearch: boolean;
+  onlySearch?: boolean;
   label?: string;
-  modelValue?: string;
+  modelValue: string;
 }
 
 const props = withDefaults(defineProps<Props>(), {
   isLoading: false,
   onlySearch: false,
+  modelValue: '',
 });
 const emit = defineEmits<{
   (e: 'update:modelValue', value: string | null):void,
@@ -72,11 +73,11 @@ const isSearching = ref<boolean>(false);
 const localValue = ref<string>('');
 const search = ref<HTMLInputElement>();
 
-watch(() => modelValue, function (value: Object) {
+watch(modelValue, function (value: Object) {
   localValue.value = value.toString();
   isSearching.value = !!value;
 });
-watch(() => isSearching, async function (value) {
+watch(isSearching, async function (value) {
   if (value) {
     await nextTick();
     search.value?.focus();

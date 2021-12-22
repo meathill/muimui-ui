@@ -9,6 +9,8 @@
     "suppressImplicitAnyIndexErrors": true,
     "allowSyntheticDefaultImports": true,
     "allowJs": true,
+    "resolveJsonModule": true,
+    "esModuleInterop": true,
 
     "paths": {
       "@/*": [

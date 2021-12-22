@@ -43,6 +43,7 @@ export default {
 <script lang="ts" setup>
 import {ref} from "vue";
 import {history} from "@/demo/router";
+import PageHeader from "@/page-header.vue";
 import SpinButton from '@/spin-button.vue';
 import Toggle from '@/Toggle.vue';
 

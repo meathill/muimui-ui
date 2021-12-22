@@ -32,6 +32,7 @@ export default {
 <script lang="ts" setup>
 import {history} from "@/demo/router";
 import Dropdown from '@/dropdown.vue';
+import PageHeader from "@/page-header.vue";
 
 const currentUser = {
   email: 'meathill@openresty.com',

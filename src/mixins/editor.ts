@@ -10,8 +10,9 @@ import {
 } from 'vue';
 
 export interface Props {
-  modelValue: any;
+  modelValue: string;
   isEditMode: boolean;
+  isEditing: boolean;
 }
 
 export interface EditorMixin {
@@ -21,7 +22,9 @@ export interface EditorMixin {
   createDefaultValue: Function;
 }
 
-export const defaultProps = {
+export const defaultProps:Props = {
+  modelValue: '',
+  isEditMode: false,
   isEditing: false,
 }
 

@@ -46,6 +46,7 @@ export default {
 <script lang="ts" setup>
 import {ref} from 'vue';
 import {history} from "@/demo/router";
+import PageHeader from "@/page-header.vue";
 import Alert from '@/alert.vue';
 import Toggle from '@/Toggle.vue';
 
@@ -55,8 +56,8 @@ const timeouts = [
   1000,
   5000,
 ];
-const message = ref<string | null>(null);
-const status = ref<boolean | null>(null);
+const message = ref<Nullable<string>>(null);
+const status = ref<Nullable<boolean>>(null);
 const timeout = ref<number>(0);
 const value = ref<string>('hello world');
 

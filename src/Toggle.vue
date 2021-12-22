@@ -35,14 +35,14 @@ import {
 
 interface Props {
   modelValue: any;
-  valueOn: any;
-  valueOff: any;
-  labelOn: string;
-  labelOff: string;
-  id: string;
-  isSaving: boolean;
-  disabled: boolean;
-  title: string;
+  valueOn?: Nullable<any>;
+  valueOff?: Nullable<any>;
+  labelOn?: string;
+  labelOff?: string;
+  id?: string;
+  isSaving?: boolean;
+  disabled?: boolean;
+  title?: string;
 }
 
 const props = withDefaults(defineProps<Props>(), {
@@ -54,7 +54,7 @@ const props = withDefaults(defineProps<Props>(), {
   id: '',
   isSaving: false,
   disabled: false,
-  title: 'toggle',
+  title: 'Toggle',
 });
 const emit = defineEmits<{
   (e: 'update:modelValue', value: any): void,

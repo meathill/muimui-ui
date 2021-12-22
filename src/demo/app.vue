@@ -3,6 +3,7 @@ nav#navbar.navbar.navbar-extend-lg.navbar-dark.bg-orange
   .container
     .navbar-brand
       a.navbar-brand(href='#') Muimui UI
+        small.text-muted.ms-2 v{{version}}
 
 #app.mt-3.container
   .row
@@ -11,6 +12,9 @@ nav#navbar.navbar.navbar-extend-lg.navbar-dark.bg-orange
 </template>
 
 <script lang="ts" setup>
+import pkg from '../../package.json';
 import DemoList from './demo.vue';
 //import Manager from '@/mixins/modal';
+
+const {version} = pkg;
 </script>

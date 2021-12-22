@@ -169,24 +169,24 @@ type DateTypes = Date | Moment | string;
 type RangeIndex = 0 | 1;
 type Momentable = Nullable<Date | Moment | string | number>;
 interface Props {
-  modelValue?: number | number[] | Date | Date[] | string | string[];
-  format: string;
-  disabled: boolean;
+  modelValue: Nullable<number | number[] | Date | Date[] | string | string[] | Moment | Moment[]>;
+  format?: string;
+  disabled?: boolean;
   disabledDates?: DateTypes[] | string;
   disabledDaysOfWeek?: number[] | string;
   width?: string;
-  clearButton: boolean;
-  lang: string;
-  name: string;
+  clearButton?: boolean;
+  lang?: string;
+  name?: string;
   id?: string;
   placeholder?: string;
   locale?: any;
-  timeText: string;
-  hourText: string;
-  minuteText: string;
-  secondText: string;
-  isRange: boolean;
-  separator: string;
+  timeText?: string;
+  hourText?: string;
+  minuteText?: string;
+  secondText?: string;
+  isRange?: boolean;
+  separator?: string;
   minDateTime?: Momentable;
   maxDateTime?: Momentable;
 }
@@ -202,14 +202,14 @@ function toDateString(date: DateTypes):string {
   date = date instanceof Date ? date : date.toDate();
   return `${date.getFullYear()}-${date.getMonth()}-${date.getDate()}`;
 }
-function toMoment(date: Date | Moment | number | string):Moment {
+function toMoment(date:Momentable):Moment {
   return moment(date);
 }
 
 const now = Date.now();
 const m = moment();
 const props = withDefaults(defineProps<Props>(), {
-  modelValue: undefined,
+  modelValue: null,
   format: 'YYYY-MM-DD HH:mm:ss',
   disabled: false,
   disabledDates: undefined,
@@ -247,12 +247,10 @@ const {
   secondText,
   isRange,
   separator,
+  minDateTime,
+  maxDateTime,
 } = toRefs(props);
-const minDateTime = ref<DateTypes>(m);
-const maxDateTime = ref<DateTypes>(m);
-if (!modelValue.value) {
-  modelValue.value = now;
-}
+
 const localValue = ref<DateRange>([m, m]);
 const current = ref<RangeIndex>(0);
 const baseTime = ref<Moment>(m);
@@ -569,7 +567,7 @@ function processValue() {
     localValue.value = [toMoment(start), toMoment(end)];
   } else {
     const value = isArray(modelValue.value) ? modelValue.value[0] : modelValue.value;
-    localValue.value = [toMoment(value || new Date())];
+    localValue.value = [toMoment(value || now)];
   }
   update(false);
 }

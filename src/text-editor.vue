@@ -50,16 +50,17 @@ import {
   onMounted,
   nextTick,
   toRefs,
+  onBeforeMount,
+  watch,
 } from 'vue';
-import useEditor from './mixins/editor';
 
 interface Props {
-  modelValue: any;
-  isEditMode: boolean;
-  tagName: string;
-  type: string;
-  isMultiline: boolean;
-  placeholder: string;
+  modelValue: string;
+  isEditMode?: boolean;
+  tagName?: string;
+  type?: string;
+  isMultiline?: boolean;
+  placeholder?: string;
 }
 
 interface StyleObject {
@@ -72,6 +73,7 @@ interface StyleObject {
 }
 
 const props = withDefaults(defineProps<Props>(), {
+  modelValue: '',
   tagName: 'div',
   isEditMode: false,
   type: 'text',
@@ -89,11 +91,8 @@ const {
   isMultiline,
   placeholder,
 } = toRefs(props);
-const {
-  localValue,
-  onChange,
-} = useEditor(props, emit);
 
+const localValue = ref<string>('');
 const isEditing = ref<boolean>(false);
 const style = ref<StyleObject>({
   fontSize: '',
@@ -103,28 +102,10 @@ const style = ref<StyleObject>({
   marginBottom: '',
 });
 const el = ref<HTMLElement>();
-const input = ref<HTMLInputElement>();
+const input = ref<HTMLInputElement | HTMLTextAreaElement>();
 
-onMounted(() => {
-  if (!el.value) {
-    return;
-  }
-  const _style = getComputedStyle(el.value);
-  const fontSize = _style.getPropertyValue('font-size');
-  const lineHeight = _style.getPropertyValue('line-height');
-  const color = _style.getPropertyValue('color');
-  const fontWeight = _style.getPropertyValue('font-weight');
-  const marginBottom = _style.getPropertyValue('margin-bottom');
-  style.value = {
-    fontSize,
-    lineHeight,
-    color,
-    fontWeight,
-    marginBottom,
-    ...isMultiline.value ? null : {
-      height: lineHeight,
-    },
-  };
+watch(modelValue, value => {
+  localValue.value = value;
 });
 
 function cancel() {
@@ -149,4 +130,32 @@ async function startEdit() {
     input.value?.select();
   }
 }
+function onChange() {
+  emit('update:modelValue', localValue.value);
+}
+
+onBeforeMount(() => {
+  localValue.value = modelValue.value;
+});
+onMounted(() => {
+  if (!el.value) {
+    return;
+  }
+  const _style = getComputedStyle(el.value);
+  const fontSize = _style.getPropertyValue('font-size');
+  const lineHeight = _style.getPropertyValue('line-height');
+  const color = _style.getPropertyValue('color');
+  const fontWeight = _style.getPropertyValue('font-weight');
+  const marginBottom = _style.getPropertyValue('margin-bottom');
+  style.value = {
+    fontSize,
+    lineHeight,
+    color,
+    fontWeight,
+    marginBottom,
+    ...isMultiline.value ? null : {
+      height: lineHeight,
+    },
+  };
+});
 </script>

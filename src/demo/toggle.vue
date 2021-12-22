@@ -37,6 +37,7 @@ export default {
 
 <script lang="ts" setup>
 import {ref} from "vue";
+import PageHeader from "@/page-header.vue";
 import Toggle from '@/Toggle.vue';
 import {history} from "@/demo/router";
 

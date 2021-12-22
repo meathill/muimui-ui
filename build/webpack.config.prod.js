@@ -65,12 +65,6 @@ module.exports = async() => {
     return result;
   }, {});
 
-  files = await readdir(`${src}/mixins`, 'utf8');
-  entry = files.reduce((result, file) => {
-    const [filename] = file.split('.');
-    result[`mixins/${filename}`] = `${src}/mixins/${file}`;
-    return result;
-  }, entry);
   entry.index = `${src}/index.js`;
   entry.helper = `${src}/helper/index.js`;
   entry.bus = `${src}/event-bus.js`;

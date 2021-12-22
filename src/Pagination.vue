@@ -44,7 +44,7 @@ interface Props {
   perPage: number;
   isLoading: boolean;
   modelValue: number;
-  isHidePages: boolean;
+  isHidePages?: boolean;
 }
 const props = withDefaults(defineProps<Props>(), {
   total: 0,
