@@ -40,7 +40,7 @@ import {onBeforeMount, onBeforeUnmount, ref, toRefs} from "vue";
 interface Props {
   tagName: string;
   align: string;
-  to?: object;
+  to?: Nullable<object>;
   label: string;
 }
 
@@ -48,6 +48,7 @@ const props = withDefaults(defineProps<Props>(), {
   tagName: 'div',
   align: 'left',
   label: 'Dropdown',
+  to: null,
 });
 const {
   tagName,

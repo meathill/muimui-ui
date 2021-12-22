@@ -23,13 +23,14 @@ import {toRefs} from "vue";
 
 interface Props {
   type?: string;
-  icon?: string;
+  icon?: Nullable<string>;
   status?: boolean;
   label?: string;
 }
 
 const props = withDefaults(defineProps<Props>(),  {
   type: 'button',
+  icon: null,
   status: false,
   label: 'Button',
 });

@@ -89,9 +89,9 @@ async function doOpenComponentModal() {
   setTimeout(() => {
     this.closeModal(modal, false);
   }, 1000);
-},
+}
 
-async doOpenNoFooterModal() {
+async function doOpenNoFooterModal() {
   const {backdrop} = this;
   try {
     await this.$root.showModal({
@@ -103,9 +103,9 @@ async doOpenNoFooterModal() {
   } catch (e) {
     console.log(e);
   }
-},
+}
 
-async doOpenAutoCloseComponentModal() {
+async function doOpenAutoCloseComponentModal() {
   const {backdrop} = this;
   let modal, months;
   try {
@@ -122,7 +122,5 @@ async doOpenAutoCloseComponentModal() {
     return;
   }
   this.value = months;
-},
-  },
-};
+}
 </script>

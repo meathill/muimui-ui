@@ -146,6 +146,7 @@ export default {
 import isArray from "lodash/isArray";
 import isString from 'lodash/isString';
 import moment from 'moment';
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 import defaultLocal from 'moment/dist/locale/en-gb';
 import {
@@ -156,9 +157,10 @@ import {
   toRefs,
   watch,
 } from "vue";
-import DurationConstructor = moment.unitOfTime.DurationConstructor;
 
-type Moment = ReturnType<typeof moment>;
+type Moment = moment.Moment;
+type DurationConstructor = moment.unitOfTime.DurationConstructor;
+type Locale = moment.Locale;
 type DateDisplayItem = {
   text: string;
   date: Date;
@@ -180,7 +182,7 @@ interface Props {
   name?: string;
   id?: string;
   placeholder?: string;
-  locale?: any;
+  locale?: Locale;
   timeText?: string;
   hourText?: string;
   minuteText?: string;
@@ -224,6 +226,11 @@ const props = withDefaults(defineProps<Props>(), {
   separator: ' ~ ',
   minDateTime: null,
   maxDateTime: null,
+  width: undefined,
+  name: undefined,
+  id: undefined,
+  placeholder: undefined,
+  locale: undefined,
 });
 const emit = defineEmits<{
   (e:'update:modelValue', value:number | number[]):void,
@@ -276,7 +283,7 @@ const dayHeader = ref<string>('');
 
 const root = ref<HTMLDivElement>();
 
-const localLocale = computed(() => {
+const localLocale = computed<Locale>(() => {
   return locale.value || defaultLocal;
 });
 const localDisabledDates = computed<string[]>(() => {
@@ -335,17 +342,17 @@ function inputClick(event:InputEvent) {
     displayPopup.value = true;
   }
 }
-function preNextDecadeClick(dir:number = 1) {
+function preNextDecadeClick(dir = 1) {
   baseTime.value.add(dir * 10, 'years');
   getDateRange();
 }
-function preNextMonthClick(dir:number = 1) {
+function preNextMonthClick(dir = 1) {
   baseTime.value.add(dir, 'month');
   month.value = baseTime.value.month();
   dayHeader.value = baseTime.value.format('MMM YYYY');
   getDateRange();
 }
-function preNextYearClick(dir:number = 1) {
+function preNextYearClick(dir = 1) {
   baseTime.value.add(dir, 'year');
   getDateRange();
   year.value = baseTime.value.year();

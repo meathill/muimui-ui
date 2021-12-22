@@ -26,9 +26,18 @@ module.exports = {
     it: false,
     expect: false,
     __dirname: true,
-    widthDefaults: true,
+
+    withDefaults: true,
     defineProps: true,
     defineEmits: true,
     defineExpose: true,
+
+    Nullable: true,
+    FocusHandler: true,
+
+    $root: true,
+  },
+  rules: {
+    '@typescript-eslint/no-unused-vars': 0,
   },
 };

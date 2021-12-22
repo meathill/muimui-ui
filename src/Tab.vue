@@ -39,7 +39,7 @@ export default {
   },
   created() {
     this._isTab = true;
-    let tabs = this;
+    let tabs = this; // eslint-disable-line @typescript-eslint/no-this-alias
     while (!this._tabs && tabs.$parent) {
       if (tabs._isTabGroup) {
         tabs.tabs.push(this);

@@ -29,6 +29,8 @@ import {
   computed,
   watch,
   getCurrentInstance,
+  defineComponent,
+  toRefs,
 } from 'vue';
 
 interface Props {
@@ -44,23 +46,29 @@ const props = withDefaults(defineProps<Props>(), {
 });
 
 const emit = defineEmits<{
-  (e: 'hide', instance: any): void
+  (e: 'hide', instance: ReturnType<typeof defineComponent>): void
 }>();
 
+const {
+  message,
+  status,
+  autoHide,
+} = toRefs(props);
 const visible = ref(true);
 
 const timeoutDuration = computed(() => {
-  return Number(props.autoHide);
+  return Number(autoHide.value);
 });
 
-let timeout:any;
-let instance = getCurrentInstance();
-watch(() => props.message, (value) => {
+type timer = ReturnType<typeof setTimeout>;
+let timeout!:timer;
+watch(message, (value) => {
   clearTimeout(timeout);
   if (value) {
     visible.value = true;
-    if (timeoutDuration.value && props.status) {
+    if (timeoutDuration.value && status.value) {
       timeout = setTimeout(() => {
+        let instance = getCurrentInstance();
         visible.value = false;
         emit('hide', instance);
       }, timeoutDuration.value);
@@ -72,10 +80,4 @@ function doDismiss() {
   visible.value = false;
   clearTimeout(timeout);
 }
-
-defineExpose({
-  props,
-
-  visible,
-});
 </script>

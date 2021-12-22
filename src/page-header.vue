@@ -67,8 +67,8 @@ interface HistoryItem {
 interface Props {
   history: HistoryItem[];
   isLoading?: boolean;
-  status?: boolean;
-  message?: string;
+  status?: Nullable<boolean>;
+  message?: Nullable<string>;
   title?: string;
   autoHide?: number;
   titleTag?: string;
@@ -81,6 +81,8 @@ const props = withDefaults(defineProps<Props>(), {
   autoHide: 0,
   titleTag: 'h1',
   isTitleEditor: false,
+  status: null,
+  message: null,
 });
 const emit = defineEmits<{
   (e: 'title-change', title: string): void;

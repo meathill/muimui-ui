@@ -1,4 +1,4 @@
-import {h} from 'vue';
+import {defineComponent, h} from 'vue';
 import {
   createRouter,
   createWebHistory,
@@ -19,7 +19,7 @@ import SpinButton from '@/demo/spin-button.vue';
 interface Route {
   path: string;
   name: string;
-  component: any;
+  component: ReturnType<typeof defineComponent>;
   title: string;
 }
 

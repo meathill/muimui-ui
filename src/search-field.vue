@@ -54,9 +54,10 @@ interface Props {
 }
 
 const props = withDefaults(defineProps<Props>(), {
+  modelValue: '',
   isLoading: false,
   onlySearch: false,
-  modelValue: '',
+  label: '',
 });
 const emit = defineEmits<{
   (e: 'update:modelValue', value: string | null):void,
@@ -73,7 +74,7 @@ const isSearching = ref<boolean>(false);
 const localValue = ref<string>('');
 const search = ref<HTMLInputElement>();
 
-watch(modelValue, function (value: Object) {
+watch(modelValue, function (value:string) {
   localValue.value = value.toString();
   isSearching.value = !!value;
 });

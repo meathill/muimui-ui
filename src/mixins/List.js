@@ -15,7 +15,7 @@ export default {
   },
 
   methods: {
-    refresh() {
+    refresh() { // eslint-disable-line @typescript-eslint/no-empty-function
 
     },
   },

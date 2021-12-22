@@ -34,9 +34,9 @@ import {
 } from "vue";
 
 interface Props {
-  modelValue: any;
-  valueOn?: Nullable<any>;
-  valueOff?: Nullable<any>;
+  modelValue: any; // eslint-disable-line @typescript-eslint/no-explicit-any
+  valueOn?: Nullable<any>; // eslint-disable-line @typescript-eslint/no-explicit-any
+  valueOff?: Nullable<any>; // eslint-disable-line @typescript-eslint/no-explicit-any
   labelOn?: string;
   labelOff?: string;
   id?: string;
@@ -57,7 +57,7 @@ const props = withDefaults(defineProps<Props>(), {
   title: 'Toggle',
 });
 const emit = defineEmits<{
-  (e: 'update:modelValue', value: any): void,
+  (e: 'update:modelValue', value: any): void, // eslint-disable-line @typescript-eslint/no-explicit-any
   (e: 'change', enabled:boolean, value: ReturnType<typeof getCurrentInstance>): void,
 }>();
 
