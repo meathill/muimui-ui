@@ -57,7 +57,7 @@ const {
   to,
 } = toRefs(props);
 const show = ref<boolean>(false);
-const $el = ref<HTMLDivElement>();
+const $el = ref<HTMLDivElement | null>(null);
 
 function toggle() {
   show.value = !show.value;

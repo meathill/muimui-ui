@@ -32,7 +32,7 @@
         ) ›
         p(@click="switchMonthView") {{dayHeader}}
       .date-time-picker-weekRange
-        span(v-for="w in localLocale._weekdaysMin") {{w}}
+        span(v-for="w in localLocale.weekdaysMin") {{w}}
       .date-time-picker-dateRange
         span(
           v-for="d in dateRange",
@@ -53,7 +53,7 @@
         p(@click="switchDecadeView") {{year}}
       .date-time-picker-monthRange
         span(
-          v-for="(m, index) in localLocale._months",
+          v-for="(m, index) in localLocale.months",
           v-text="m.substr(0,3)",
           :class="{'date-time-picker-dateRange-item-active': baseTime.month() === index && baseTime.year() === baseTime.year()}",
           @click="monthSelect(index)",
@@ -281,7 +281,7 @@ const month = ref<number>();
 const formatted = ref<string>('');
 const dayHeader = ref<string>('');
 
-const root = ref<HTMLDivElement>();
+const root = ref<HTMLDivElement | null>(null);
 
 const localLocale = computed<Locale>(() => {
   return locale.value || defaultLocal;

@@ -72,7 +72,7 @@ const {
 
 const isSearching = ref<boolean>(false);
 const localValue = ref<string>('');
-const search = ref<HTMLInputElement>();
+const search = ref<HTMLInputElement | null>(null);
 
 watch(modelValue, function (value:string) {
   localValue.value = value.toString();

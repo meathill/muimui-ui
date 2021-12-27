@@ -101,8 +101,8 @@ const style = ref<StyleObject>({
   fontWeight: '',
   marginBottom: '',
 });
-const el = ref<HTMLElement>();
-const input = ref<HTMLInputElement | HTMLTextAreaElement>();
+const el = ref<HTMLElement | null>(null);
+const input = ref<HTMLInputElement | HTMLTextAreaElement | null>(null);
 
 watch(modelValue, value => {
   localValue.value = value;
